@@ -6,7 +6,10 @@ body {
     margin: 0;
     background-color: #ffffff;
     font-family: Arial;
-
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 120px;
 }
 
 /* TUDO DO HEADER*/
@@ -201,8 +204,25 @@ nav.esquerda a:hover {
     transition: background-color 0.2s ease;
 }
 
-.registrar:hover {
-    background-color: #005a87;
-}
 
 /* FIM DO POPUP */
+
+
+/* INICIO DE FOOTER */
+
+footer {
+    background-color: #006EA1;
+    margin-top: auto; 
+    padding: 10px 8px;
+}
+
+.logofooter {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+
+/* FIM DE FOOTER */
