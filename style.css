@@ -224,5 +224,21 @@ footer {
     margin-right: 25px;
 }
 
-
 /* FIM DE FOOTER */
+
+/*PAGINA DE CONTATO*/
+
+.coisascontatos{
+    text-align: left;
+    margin-left: 4%;
+    font-size: larger;
+}
+
+#titulocontato{
+     margin-top: 4%;
+}
+
+#textocontato{
+     margin-top: -0.5%;
+    line-height: 25px;
+}
