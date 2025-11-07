@@ -22,14 +22,14 @@ header {
 }
 
 .logo {
-    margin-left: 40px;
-    height: 130px;
+    margin-left: 30px;
+    height: 100px;
 }
 
 nav.esquerda ul {
     list-style: none;
     display: flex;
-    gap: 50px;
+    gap: 30px;
     margin: 0;
     padding: 0;
     align-items: center;
@@ -41,17 +41,17 @@ nav.esquerda a {
     color: #ffffff;
     text-decoration: none;
     font-weight: 800;
-    font-size: 20px; 
+    font-size: 14px; 
     letter-spacing: 1px;
 
 }
 
 nav.direita {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     align-items: center;
     margin-left: auto;
-    margin-right: 40px;
+    margin-right: 35px;
 }
 
 .login, .criar{
@@ -59,7 +59,7 @@ nav.direita {
     padding: 8px 16px; 
     border-radius: 8px;
     font-weight: 800;
-    font-size: 20px; 
+    font-size: 14px; 
     color: #043b51;
     background: #A8AABC;
 }
@@ -86,7 +86,7 @@ nav.esquerda a:hover {
 
 /* FINAL DO HEADER*/
 
-/* MODAL DE CADASTRO */
+/* POPUP DE CADASTRO */
 
 .popup-overlay {
     display: none;
@@ -134,8 +134,8 @@ nav.esquerda a:hover {
     align-items: center;
     justify-content: center;
     transition: color 0.2s ease;
-    z-index: 1010; /* Garante que está acima do conteúdo */
-    pointer-events: auto; /* Força o botão a ser clicável */
+    z-index: 1010; 
+    pointer-events: auto; 
 }
 
 .popupX:hover {
@@ -205,4 +205,4 @@ nav.esquerda a:hover {
     background-color: #005a87;
 }
 
-/* FIM DO MODAL */
+/* FIM DO POPUP */

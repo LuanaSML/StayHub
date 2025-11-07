@@ -1,39 +1,69 @@
-// Esperar o DOM carregar completamente
+
 document.addEventListener('DOMContentLoaded', function() {
-    const overlay = document.getElementById('popupoverlay');
+    // Overlays
+    const overlayCadastro = document.getElementById('popupoverlay');
+    const overlayLogin = document.getElementById('popupoverlay-login');
+
+    // Buttons that open modals
     const btnCadastro = document.getElementById('btnCadastro');
-    const btnX = document.getElementById('popupX');
-    
-    // Abrir modal quando clicar em CADASTRO
-    if (btnCadastro) {
+    const btnLogin = document.getElementById('btnLogin');
+
+    // Close buttons
+    const btnXCadastro = document.getElementById('popupX');
+    const btnXLogin = document.getElementById('popupX-login');
+
+    // Open cadastro
+    if (btnCadastro && overlayCadastro) {
         btnCadastro.addEventListener('click', function(e) {
             e.preventDefault();
-            overlay.classList.add('active');
+            overlayCadastro.classList.add('active');
         });
     }
-    
-    // Fechar modal quando clicar no X
-    if (btnX) {
-        btnX.addEventListener('click', function(e) {
+
+    // Open login
+    if (btnLogin && overlayLogin) {
+        btnLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            overlayLogin.classList.add('active');
+        });
+    }
+
+    // Close cadastro with X
+    if (btnXCadastro && overlayCadastro) {
+        btnXCadastro.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            overlay.classList.remove('active');
+            overlayCadastro.classList.remove('active');
         });
     }
-    
-    // Fechar modal quando clicar no overlay (fundo escuro)
-    overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) {
-            overlay.classList.remove('active');
-        }
-    });
-    
-    // Prevenir fechamento quando clicar no conteúdo do modal
-    const modalContent = document.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.addEventListener('click', function(e) {
+
+    // Close login with X
+    if (btnXLogin && overlayLogin) {
+        btnXLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            overlayLogin.classList.remove('active');
+        });
+    }
+
+    // Close when clicking on each overlay outside modal-content
+    if (overlayCadastro) {
+        overlayCadastro.addEventListener('click', function(e) {
+            if (e.target === overlayCadastro) overlayCadastro.classList.remove('active');
+        });
+    }
+    if (overlayLogin) {
+        overlayLogin.addEventListener('click', function(e) {
+            if (e.target === overlayLogin) overlayLogin.classList.remove('active');
+        });
+    }
+
+    // Prevent closing when clicking inside modal-content for all modals
+    const modalContents = document.querySelectorAll('.modal-content');
+    modalContents.forEach(function(mc) {
+        mc.addEventListener('click', function(e) {
             e.stopPropagation();
         });
-    }
+    });
 });
 

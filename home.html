@@ -21,7 +21,7 @@
             </ul>
         </nav>
         <nav class="direita">
-            <a class="login" href="#">LOGIN</a>
+            <a class="login" href="#" id="btnLogin">LOGIN</a>
             <a class="criar" href="#" id="btnCadastro">CADASTRO</a>
         </nav>
     </header>
@@ -48,6 +48,29 @@
             </form>
         </div>
     </div>
+
+    <div class="popup-overlay" id="popupoverlay-login">
+        <div class="modal-content">
+            <button class="popupX" id="popupX-login">&times;</button>
+            <h2 class="popup-titulo">ENTRE NA SUA CONTA</h2>
+            <form class="popup-form">
+                <div class="popup-grupo">
+                    <label for="email">seu email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="popup-grupo">
+                    <label for="senha">sua senha</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <button type="submit" class="registrar">ENTRAR</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
 
     <script src="script.js"></script>
 </body>
