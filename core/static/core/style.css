@@ -304,14 +304,14 @@ width: calc(16% - 6px);
 }
 
 .quadrado:hover  {
-    box-shadow: 0 8px 22px rgba(28, 25, 53, 0.12);
-    transform: translateY(-7px);
+box-shadow: 0 8px 22px rgba(28, 25, 53, 0.12);
+transform: translateY(-7px);
 }
 
 .quartoLink {
-    display: block;
-    color: inherit;
-    text-decoration: none;
+display: block;
+color: inherit;
+text-decoration: none;
 }
 
 
@@ -347,9 +347,95 @@ margin-left: 5%;
 
 /*QUARTO DETALHES (QUANDO A GENTE FAZ CLICK NO QUARTO) */
 
-#detalheVoltar{
-margin-top:30px;
-font-weight:700; 
-text-decoration:none;
-color:#006EA1;
+
+#tudoDoQuarto{
+margin-left: 4%;
+margin-right: 4%;
+margin-bottom: 5%;
+margin-top: 2%;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: left;
+
 }
+
+#fileira1QuartoDetalhe{
+display: flex;
+gap: 20px;
+margin-bottom: 20px;
+}
+
+
+.detalheVoltar{
+margin-top:30px;
+text-decoration:none;
+color: #000;
+font-size:38px; 
+}
+
+.detalheVoltar:hover  {
+color: #006EA1;
+}
+
+#tituloQuartoDetalhe{
+font-size: 30px;
+margin-top: 33px;
+font-weight: 400;
+}
+
+#quartoDetalheIMG{
+margin-top: -4%;
+min-width:580px; 
+height:400px; 
+background-size:cover; 
+background-position:center; 
+border-top-left-radius:25px;
+border-bottom-left-radius:25px;
+}
+
+.descricaoDetalhe{
+font-size: 30px;
+margin-top: 33px;
+font-weight: 500;
+}
+
+#AnfitriaoTudo{
+margin-left: 4%;
+margin-right: 4%;
+margin-bottom: 5%;
+margin-top: -3%;
+}
+
+#anfitriaoContainer {
+  display: flex;           
+  align-items: center;  
+  gap: 15px;               
+}
+
+#bolaAnfitriao {
+  width: 80px;             
+  height: 80px;
+}
+
+#textoAnfitriao h4,
+#textoAnfitriao p {
+  margin: 8px;             
+}
+
+#textoAnfitriao h4{
+font-size: 20px;
+}
+
+#textoAnfitriao p{
+font-size: 15px;
+}
+
+#linhaDetalhes{
+    width: 80%;            
+    height: 1px;              
+    background-color: #585858; 
+    margin-top: 2%;  
+}
+
+/*QUARTO DETALHES FINAL (QUANDO A GENTE FAZ CLICK NO QUARTO) */

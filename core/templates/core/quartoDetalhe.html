@@ -7,6 +7,7 @@
     <title>{{ quarto.nome }} — StayHub</title>
     <link rel="stylesheet" href="{% static 'core/style.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- COPIEM OS DOIS LINKS NO DE VCS, O SEGUNDO E OS NEGOCIOS DO FOOTER) -->
   </head>
 
 
@@ -82,26 +83,41 @@
 
 <!-- ONDE ESTA TODA A INFO NAO COPIARRR -->
 
-    <main >
-      <div class="detalheQuarto" style="display:flex;gap:24px;align-items:flex-start;">
+    <main id="tudoDoQuarto">
+      <div class="detalheQuarto" >
         
-        <div>
-          <p id=detalheVoltar> <a href="{% url 'home' %}">←</a></p>
-          <h1>{{ quarto.nome }}</h1>
-
-        <div style="flex:1; min-width:320px; height:360px; background-image: url('{{ quarto.imagem_url }}'); background-size:cover; background-position:center; border-radius:8px;"></div>
-
-          <p>R$ {{ quarto.preco }}</p>
+        <div id="fileira1QuartoDetalhe">
+          <p class=detalheVoltar> <a class=detalheVoltar href="{% url 'home' %}"><i class="fa-solid fa-arrow-left"></i></a></p>
+          <h4 id="tituloQuartoDetalhe">{{ quarto.nome }}</h4>
+        </div>
+        
+        <div id="quartoDetalheIMG" style="background-image: url('{{ quarto.imagem_url }}'); ">
+        </div>
 
           {% if quarto.descricao %}
-          <p>{{ quarto.descricao }}</p>
+          <h1 class="descricaoDetalhe">{{ quarto.descricao }}</h1>
 
           {% else %}
-            <p>Descrição não disponível.</p>
+            <h1 class="descricaoDetalhe"> Descrição não disponível.</h1>
           {% endif %} 
-        </div>
-      </div>
+
     </main>
+
+  <section id="AnfitriaoTudo">
+
+      <div id="anfitriaoContainer">
+        <img id="bolaAnfitriao" src="{% static 'core/img/Anfitriao.png' %}">
+        <div id="textoAnfitriao">
+        <h4>Anfitri@: Doutor Casa</h4>
+        <p>Superhot - 6 anos hospedando</p>
+      </div>
+    </div>
+
+  <div id="linhaDetalhes"></div>
+  <div id="InfoEsteticaDetalhes"></div>
+
+</section>
+
 
 <!-- ONDE ESTA TODA A INFO FINAL NAO COPIARRR -->
 
@@ -137,7 +153,4 @@
 <!-- O SCRIPT DOS NEGOCIOS DO POPUP ESTAO AQUI (COPIAR NO DE VCS) -->
   <script src="{% static 'core/script.js' %}"></script>
   </body>
-
-
- </body>
 </html>
