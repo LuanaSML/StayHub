@@ -303,6 +303,18 @@ width: calc(16% - 6px);
 
 }
 
+.quadrado:hover  {
+    box-shadow: 0 8px 22px rgba(28, 25, 53, 0.12);
+    transform: translateY(-7px);
+}
+
+.quartoLink {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+
 .quarto {
 padding: 16px;
 text-align: center;
@@ -331,3 +343,13 @@ color: #585858;
 margin-left: 5%;
 }
 
+/*QUARTOS DO HOME FINAL*/
+
+/*QUARTO DETALHES (QUANDO A GENTE FAZ CLICK NO QUARTO) */
+
+#detalheVoltar{
+margin-top:30px;
+font-weight:700; 
+text-decoration:none;
+color:#006EA1;
+}

@@ -1,5 +1,5 @@
 import requests
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 from .models import Quarto
 
@@ -29,15 +29,33 @@ def home(request):
                 
                 if response.status_code == 200:
                     data = response.json()
-                    quartos = [
+                    quartos_data = [
                         {
                             'nome': f'Quarto {i+1}',
                             'preco': 200 + (i * 50),
-                            'imagem_url': img["urls"]["regular"]
+                            'imagem_url': img["urls"]["regular"],
+                            'descricao': img.get('description') or img.get('alt_description') or ''
                         }
                         for i, img in enumerate(data.get("results", []))
                     ]
-                    print("✓ Quartos carregados da API Unsplash")
+                    # Persistir (ou recuperar) no banco para garantir IDs e paginação de detalhe
+                    quartos = []
+                    for item in quartos_data:
+                        try:
+                            obj, created = Quarto.objects.get_or_create(
+                                imagem_url=item['imagem_url'],
+                                defaults={
+                                    'nome': item['nome'],
+                                    'preco': item['preco'],
+                                    'descricao': item.get('descricao', '')
+                                }
+                            )
+                            quartos.append(obj)
+                        except Exception as e:
+                            # Se persistir falhar, adicione ao array como dict (fallback)
+                            print(f"Falha ao salvar Quarto: {e}")
+                            quartos.append(item)
+                    print("✓ Quartos carregados (API Unsplash) e sincronizados com o banco")
         except Exception as e:
             print(f"Erro ao buscar API Unsplash: {e}")
        
@@ -48,3 +66,9 @@ def home(request):
 def contato(request):
     """Página de contato"""
     return render(request, 'core/contato.html')
+
+
+def quartoDetalhe(request, pk):
+    """Exibe a página de detalhe para um quarto específico."""
+    quarto = get_object_or_404(Quarto, pk=pk)
+    return render(request, 'core/quartoDetalhe.html', {'quarto': quarto})

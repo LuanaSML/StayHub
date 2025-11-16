@@ -1,19 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StayHub</title>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{{ quarto.nome }} — StayHub</title>
     <link rel="stylesheet" href="{% static 'core/style.css' %}" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   </head>
 
+
+
+
   <body>
 
-<!-- NEGOCIO DO HEADER (COPIAR NO DE VCS) -->
+    <!-- NEGOCIO DO HEADER (COPIAR NO DE VCS) -->
     <header>
       <img class="logo" src="{% static 'core/img/LOGO.png' %}" />
       <nav class="esquerda">
@@ -75,27 +76,36 @@
       </div>
     </div>
 <!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
-    
-<!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
-<!-- Quem for mecher em negocio do api ele esta na pasta de views.py do core -->
-<h2 id="tituloHome"> Acomodacoes proximas a voce </h2>
 
-<main class="quadradosDosQuartos">
-  {% if quartos %}
-    {% for quarto in quartos %}
-      <div class="quadrado">
-        <a href="{% url 'quartoDetalhe' quarto.id %}" class="quartoLink">
-          <div class="quarto" style="background-image: url('{{ quarto.imagem_url }}'); background-size: cover; background-position: center;"></div>
-          <h4 class="textoQuadrado" id="textoQuadradoTitulo">{{ quarto.nome }}</h4>
-          <p class="textoQuadrado" id="textoQuadradoPreco">R$ {{ quarto.preco }}</p>
-        </a>
+
+
+
+<!-- ONDE ESTA TODA A INFO NAO COPIARRR -->
+
+    <main >
+      <div class="detalheQuarto" style="display:flex;gap:24px;align-items:flex-start;">
+        
+        <div>
+          <p id=detalheVoltar> <a href="{% url 'home' %}">←</a></p>
+          <h1>{{ quarto.nome }}</h1>
+
+        <div style="flex:1; min-width:320px; height:360px; background-image: url('{{ quarto.imagem_url }}'); background-size:cover; background-position:center; border-radius:8px;"></div>
+
+          <p>R$ {{ quarto.preco }}</p>
+
+          {% if quarto.descricao %}
+          <p>{{ quarto.descricao }}</p>
+
+          {% else %}
+            <p>Descrição não disponível.</p>
+          {% endif %} 
+        </div>
       </div>
-    {% endfor %}
-  {% else %}
-    <p>Nenhum quarto disponível no momento.</p>
-  {% endif %}
- </main>
-<!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
+    </main>
+
+<!-- ONDE ESTA TODA A INFO FINAL NAO COPIARRR -->
+
+
 
 
 <!-- FOOTER (COPIAR NO DE VCS) -->
@@ -127,4 +137,7 @@
 <!-- O SCRIPT DOS NEGOCIOS DO POPUP ESTAO AQUI (COPIAR NO DE VCS) -->
   <script src="{% static 'core/script.js' %}"></script>
   </body>
+
+
+ </body>
 </html>
