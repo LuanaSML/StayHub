@@ -10,6 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
+UNSPLASH_SECRET_KEY = os.getenv("UNSPLASH_SECRET_KEY")
+
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

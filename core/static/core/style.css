@@ -89,7 +89,7 @@ nav.esquerda a:hover {
 
 /* FINAL DO HEADER*/
 
-/* POPUP DE CADASTRO */
+/* POPUP DE CADASTRO E LOGIN */
 
 .popup-overlay {
     display: none;
@@ -203,8 +203,6 @@ nav.esquerda a:hover {
     margin-top: 10px;
     transition: background-color 0.2s ease;
 }
-
-
 /* FIM DO POPUP */
 
 
@@ -214,6 +212,7 @@ footer {
     background-color: #006EA1;
     margin-top: auto; 
     padding: 10px 8px;
+    margin-top: 3%;
 }
 
 .logofooter {
@@ -225,6 +224,60 @@ footer {
 }
 
 /* FIM DE FOOTER */
+
+
+
+/*QUARTOS DO HOME*/
+
+#tituloHome{
+    text-align: left;
+    margin-left: 5%;
+    margin-top: 3%;
+}
+
+.quadradosDosQuartos {
+display: flex;
+flex-direction: row;
+gap: 50px;
+padding: 20px;
+flex-wrap: wrap;
+justify-content: center;
+margin-top: -10px;
+}
+
+.quadrado {
+border-radius: 8px;
+width: calc(16% - 6px);
+
+}
+
+.quarto {
+padding: 16px;
+text-align: center;
+height: 150px;
+display: flex;
+align-items: center;
+flex: 1;
+min-width: 150px;
+border-radius: 8px;
+}
+
+.textoQuadrado {
+margin: 2%;
+text-align: left;
+}
+
+#textoQuadradoTitulo{
+font-size: large;
+margin-left: 4%;
+margin-top: 8%;
+}
+
+#textoQuadradoPreco{
+font-size: small;
+color: #585858;
+margin-left: 5%;
+}
 
 /*PAGINA DE CONTATO*/
 
@@ -242,3 +295,5 @@ footer {
      margin-top: -0.5%;
     line-height: 25px;
 }
+
+/*FIM POR ENQUANTO PAGINA DE CONTATO*/

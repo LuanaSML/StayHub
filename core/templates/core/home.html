@@ -10,6 +10,8 @@
   </head>
 
   <body>
+
+<!-- NEGOCIO DO HEADER (COPIAR NO DE VCS) -->
     <header>
       <img class="logo" src="{% static 'core/img/LOGO.png' %}" />
       <nav class="esquerda">
@@ -24,7 +26,10 @@
         <a class="criar" href="#" id="btnCadastro">CADASTRO</a>
       </nav>
     </header>
+<!-- NEGOCIO HEADER FIM (COPIAR NO DE VCS) -->
 
+
+<!-- POPUP CADASTRO (COPIAR NO DE VCS) -->
     <div class="popup-overlay" id="popupoverlay">
       <div class="modal-content">
         <button class="popupX" id="popupX">&times;</button>
@@ -46,7 +51,10 @@
         </form>
       </div>
     </div>
+<!-- POPUP CADASTRO FIM (COPIAR NO DE VCS) -->
 
+
+<!-- POPUP LOGIN (COPIAR NO DE VCS) -->
     <div class="popup-overlay" id="popupoverlay-login">
       <div class="modal-content">
         <button class="popupX" id="popupX-login">&times;</button>
@@ -64,7 +72,35 @@
         </form>
       </div>
     </div>
+<!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
+    
+<!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
+<!-- Quem for mecher em negocio do api ele esta na pasta de views.py do core -->
+<h2 id="tituloHome"> Acomodacoes proximas a voce </h2>
 
+<main class="quadradosDosQuartos">
+  {% if quartos %}
+    {% for quarto in quartos %}
+      <div class="quadrado">
+        <div class="quarto" style="background-image: url('{{ quarto.imagem_url }}'); background-size: cover; background-position: center;"></div>
+        <h4 class="textoQuadrado" id="textoQuadradoTitulo">{{ quarto.nome }}</h4>
+        <p class="textoQuadrado" id="textoQuadradoPreco">R$ {{ quarto.preco }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Nenhum quarto disponível no momento.</p>
+  {% endif %}
+ </main>
+<!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
+
+
+<!-- FOOTER (COPIAR NO DE VCS) -->
+    <footer>
+      <img class="logofooter" src="{% static 'core/img/LOGO.png' %}" />
+    </footer>
+<!-- FOOTER FIM (COPIAR NO DE VCS) -->
+
+<!-- O SCRIPT DOS NEGOCIOS DO POPUP ESTAO AQUI (COPIAR NO DE VCS) -->
     <script src="{% static 'core/script.js' %}"></script>
   </body>
 </html>
