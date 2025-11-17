@@ -100,7 +100,6 @@
           {% else %}
             <h1 class="descricaoDetalhe"> Descrição não disponível.</h1>
           {% endif %} 
-
     </main>
 
   <section id="AnfitriaoTudo">
@@ -141,10 +140,37 @@
     </div>
   </div>
 
-
 </div>
-
 </section>
+
+<form id="formReserva">
+
+  <div class="checkinEcheckout">
+    <div class="checkin">
+      <label for="checkin">Check-in</label>
+      <input type="date" id="checkin" name="checkin" required>
+    </div>
+
+    <div class="checkout">
+      <label for="checkout">Check-out</label>
+      <input type="date" id="checkout" name="checkout" required>
+    </div>
+  </div>
+
+  <div id="hospedesReserva">
+    <label for="hospedes">Hóspedes</label>
+    <select id="hospedes" name="hospedes" required>
+      <option value="1">1 hóspede</option>
+      <option value="2">2 hóspedes</option>
+      <option value="3">3 hóspedes</option>
+      <option value="4">4 hóspedes</option>
+      <option value="5">5 hóspedes</option>
+    </select>
+  </div>
+
+  <button type="submit" id="botaoReservar">Reservar</button>
+</form>
+
 
 
 <!-- ONDE ESTA TODA A INFO FINAL NAO COPIARRR -->
