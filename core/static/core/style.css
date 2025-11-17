@@ -403,7 +403,7 @@ font-weight: 500;
 #AnfitriaoTudo{
 margin-left: 4%;
 margin-right: 4%;
-margin-bottom: 5%;
+margin-bottom: 3%;
 margin-top: -3%;
 }
 
@@ -438,4 +438,39 @@ font-size: 15px;
     margin-top: 2%;  
 }
 
+#InfoEsteticaDetalhes {
+  margin-top: 3%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+}
+
+.infoDetalhesItem {
+  display: flex;
+  flex-direction: row; 
+  align-items: flex-start;
+  gap: 15px; 
+}
+
+
+.infoDetalhesItem h4, 
+.infoDetalhesItem p {
+  margin: 1%;
+}
+
+.infoDetalhesItem h4 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.infoDetalhesItem p {
+  font-size: 13px;
+  color: #555;
+}
+
+.infoDetalhesItem i{
+    font-size: 25px;
+    margin-top: 12px;
+    margin-right: 1%;
+}
 /*QUARTO DETALHES FINAL (QUANDO A GENTE FAZ CLICK NO QUARTO) */
