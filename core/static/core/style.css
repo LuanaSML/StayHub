@@ -495,7 +495,7 @@ gap: 15px;
     margin-left: 73%;
     margin-top: -17%;
     margin-bottom: 7%;
-    z-index: 6;
+    z-index: -5;
 }
 
 .checkinEcheckout {

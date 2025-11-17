@@ -22,7 +22,6 @@
         <ul>
           <li><a href="{% url 'home' %}">HOME</a></li>
           <li><a href="#">QUARTOS</a></li>
-          <li><a href="{% url 'contato' %}">CONTATO</a></li>
         </ul>
       </nav>
       <nav class="direita">
@@ -144,6 +143,11 @@
 </section>
 
 <form id="formReserva">
+
+  <div id="tituloPrecoReserva">
+    <h2 class="precoReserva">{{ quarto.preco }}</h2>  
+    <p>Mensal</p>
+  </div>
 
   <div class="checkinEcheckout">
     <div class="checkin">
