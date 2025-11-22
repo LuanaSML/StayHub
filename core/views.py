@@ -72,3 +72,6 @@ def quartoDetalhe(request, pk):
     """Exibe a página de detalhe para um quarto específico."""
     quarto = get_object_or_404(Quarto, pk=pk)
     return render(request, 'core/quartoDetalhe.html', {'quarto': quarto})
+
+def quartos(request):
+    return render(request, 'core/quartos.html')
