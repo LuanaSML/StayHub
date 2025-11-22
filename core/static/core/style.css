@@ -495,7 +495,6 @@ gap: 15px;
     margin-left: 73%;
     margin-top: -17%;
     margin-bottom: 7%;
-    z-index: -5;
 }
 
 .checkinEcheckout {
@@ -517,7 +516,20 @@ gap: 15px;
     border: 0;
 }
 
-
-
-
 /*QUARTO DETALHES FINAL (QUANDO A GENTE FAZ CLICK NO QUARTO) */
+
+/*QUARTOS INICIO */
+
+#CantoQuadradosCaixa {
+    padding: 40px !important;
+    border: 2px solid yellow !important;
+    background-color: #006EA1 !important;
+}
+
+
+#CantoQuadradosCaixa h2 {
+    margin: 0;           
+    color: white;        
+}
+
+
