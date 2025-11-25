@@ -24,8 +24,13 @@
         </ul>
       </nav>
       <nav class="direita">
-        <a class="login" href="#" id="btnLogin">LOGIN</a>
-        <a class="criar" href="#" id="btnCadastro">CADASTRO</a>
+        {% if user.is_authenticated %}
+          <span class="usuario-logado">Olá, {{ user.first_name|default:user.username }}</span>
+          <a class="sair" href="#" id="btnLogout">SAIR</a>
+        {% else %}
+          <a class="login" href="#" id="btnLogin">LOGIN</a>
+          <a class="criar" href="#" id="btnCadastro">CADASTRO</a>
+        {% endif %}
       </nav>
     </header>
 <!-- NEGOCIO HEADER FIM (COPIAR NO DE VCS) -->
@@ -37,6 +42,7 @@
         <button class="popupX" id="popupX">&times;</button>
         <h2 class="popup-titulo">CRIE SUA CONTA</h2>
         <form class="popup-form">
+          {% csrf_token %}
           <div class="popup-grupo">
             <label for="nome">seu nome</label>
             <input type="text" id="nome" name="nome" required />
@@ -62,6 +68,7 @@
         <button class="popupX" id="popupX-login">&times;</button>
         <h2 class="popup-titulo">ENTRE NA SUA CONTA</h2>
         <form class="popup-form">
+          {% csrf_token %}
           <div class="popup-grupo">
             <label for="email">seu email</label>
             <input type="email" id="emailLogin" name="email" required />
@@ -86,6 +93,41 @@
 <main class="CantoDosQuartos">
     <section id="CantoQuadradosCaixa">
         <h2>QUARTOS RESERVADOS</h2>
+        {% if user.is_authenticated %}
+          {% if reservas %}
+            {% for reserva in reservas %}
+              <div class="reserva-card">
+                {% if reserva.quarto.imagem_url %}
+                  <img src="{{ reserva.quarto.imagem_url }}" alt="{{ reserva.quarto.nome }}" class="reserva-imagem" />
+                {% else %}
+                  <div class="reserva-imagem" style="background-color: #ddd;"></div>
+                {% endif %}
+                <div class="reserva-info">
+                  <h3 class="reserva-titulo">{{ reserva.quarto.nome }}</h3>
+                  {% if reserva.quarto.descricao %}
+                    <p class="reserva-descricao">{{ reserva.quarto.descricao }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="sem-reservas-card">
+              <p class="sem-reservas-texto">NÃO IDENTIFICAMOS</p>
+              <p class="sem-reservas-texto">NENHUM QUARTO</p>
+              <p class="sem-reservas-texto">RESERVADO NO SEU</p>
+              <p class="sem-reservas-texto">NOME</p>
+              <p class="sem-reservas-emoticon">:/</p>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="sem-reservas-card">
+            <p class="sem-reservas-texto">NÃO IDENTIFICAMOS</p>
+            <p class="sem-reservas-texto">NENHUM QUARTO</p>
+            <p class="sem-reservas-texto">RESERVADO NO SEU</p>
+            <p class="sem-reservas-texto">NOME</p>
+            <p class="sem-reservas-emoticon">:/</p>
+          </div>
+        {% endif %}
     </section>
  </main>
 

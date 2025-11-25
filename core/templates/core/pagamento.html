@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pagamento — StayHub</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- COPIEM OS DOIS LINKS NO DE VCS, O SEGUNDO E OS NEGOCIOS DO FOOTER) -->
+  </head>
+
+  <body>
+
+    <!-- NEGOCIO DO HEADER (COPIAR NO DE VCS) -->
+    <header>
+      <img class="logo" src="{% static 'core/img/LOGO.png' %}" />
+      <nav class="esquerda">
+        <ul>
+          <li><a href="{% url 'home' %}">HOME</a></li>
+          <li><a href="{% url 'quartos' %}">QUARTOS</a></li>
+        </ul>
+      </nav>
+      <nav class="direita">
+        {% if user.is_authenticated %}
+          <span class="usuario-logado">Olá, {{ user.first_name|default:user.username }}</span>
+          <a class="sair" href="#" id="btnLogout">SAIR</a>
+        {% else %}
+          <a class="login" href="#" id="btnLogin">LOGIN</a>
+          <a class="criar" href="#" id="btnCadastro">CADASTRO</a>
+        {% endif %}
+      </nav>
+    </header>
+<!-- NEGOCIO HEADER FIM (COPIAR NO DE VCS) -->
+
+
+<!-- POPUP CADASTRO (COPIAR NO DE VCS) -->
+    <div class="popup-overlay" id="popupoverlay">
+      <div class="modal-content">
+        <button class="popupX" id="popupX">&times;</button>
+        <h2 class="popup-titulo">CRIE SUA CONTA</h2>
+        <form class="popup-form">
+          {% csrf_token %}
+          <div class="popup-grupo">
+            <label for="nome">seu nome</label>
+            <input type="text" id="nome" name="nome" required />
+          </div>
+          <div class="popup-grupo">
+            <label for="email">seu email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="popup-grupo">
+            <label for="senha">sua senha</label>
+            <input type="password" id="senha" name="senha" required />
+          </div>
+          <button type="submit" class="registrar">REGISTRAR</button>
+        </form>
+      </div>
+    </div>
+<!-- POPUP CADASTRO FIM (COPIAR NO DE VCS) -->
+
+
+<!-- POPUP LOGIN (COPIAR NO DE VCS) -->
+    <div class="popup-overlay" id="popupoverlay-login">
+      <div class="modal-content">
+        <button class="popupX" id="popupX-login">&times;</button>
+        <h2 class="popup-titulo">ENTRE NA SUA CONTA</h2>
+        <form class="popup-form">
+          {% csrf_token %}
+          <div class="popup-grupo">
+            <label for="email">seu email</label>
+            <input type="email" id="emailLogin" name="email" required />
+          </div>
+          <div class="popup-grupo">
+            <label for="senha">sua senha</label>
+            <input type="password" id="senhaLogin" name="senha" required />
+          </div>
+          <button type="submit" class="registrar">ENTRAR</button>
+        </form>
+      </div>
+    </div>
+<!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
+
+
+<!-- CONTEÚDO DA PÁGINA DE PAGAMENTO -->
+<main class="pagamento-main" data-reserva-id="{{ reserva.id }}">
+  {% if reserva %}
+    <a href="{% url 'quartoDetalhe' reserva.quarto.id %}" class="pagamento-voltar">
+      <i class="fa-solid fa-arrow-left"></i>
+      <span>Voltar ao quarto</span>
+    </a>
+
+    <h1 class="pagamento-titulo">Pagamento</h1>
+
+    <div class="pagamento-container">
+      <!-- Imagem do quarto -->
+      <div class="pagamento-imagem-container">
+        <div class="pagamento-imagem-quarto" style="background-image: url('{{ reserva.quarto.imagem_url }}');"></div>
+      </div>
+
+      <!-- Informações da reserva -->
+      <div class="pagamento-info-container">
+        <div class="pagamento-info-box">
+          <h2>Informações da Reserva</h2>
+          
+          <div class="pagamento-info-item">
+            <strong>Quarto:</strong>
+            <span>{{ reserva.quarto.nome }}</span>
+          </div>
+
+          <div class="pagamento-info-item">
+            <strong>Check-in:</strong>
+            <span>{{ reserva.checkin|date:"d/m/Y" }}</span>
+          </div>
+
+          <div class="pagamento-info-item">
+            <strong>Check-out:</strong>
+            <span>{{ reserva.checkout|date:"d/m/Y" }}</span>
+          </div>
+
+          <div class="pagamento-info-item">
+            <strong>Hóspedes:</strong>
+            <span>{{ reserva.hospedes }} {% if reserva.hospedes == 1 %}hóspede{% else %}hóspedes{% endif %}</span>
+          </div>
+
+          <div class="pagamento-total-container">
+            <strong class="pagamento-total-label">Valor Total:</strong>
+            <span class="pagamento-total-valor">R$ {{ reserva.valor_total|floatformat:2 }}</span>
+          </div>
+
+          <button type="button" id="botaoPagamentoRealizado">
+            Pagamento Realizado
+          </button>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="pagamento-erro-container">
+      <p class="pagamento-erro-mensagem">Erro: Reserva não encontrada</p>
+      <a href="{% url 'home' %}" class="pagamento-erro-link">Voltar para Home</a>
+    </div>
+  {% endif %}
+</main>
+<!-- FIM DO CONTEÚDO -->
+
+
+<!-- FOOTER (COPIAR NO DE VCS) -->
+    <footer>
+      <div id="footerDireito" class="osDoisLadosFooter"><img class="logofooter" src="{% static 'core/img/LOGO.png' %}" />
+    </div>
+    
+    <div id="footerIzquerda" class="osDoisLadosFooter">  
+      <h3 id="titulocontato" class="coisascontatos">ENTRE EM CONTATO CONOSCO</h3>
+
+      <div class="contatoItem">
+        <i class="fa-solid fa-envelope"></i> 
+        <p id="emailcontato" class="coisascontatos">stayhub@gmail.com</p>
+      </div>
+      
+      <div class="contatoItem">
+        <i class="fa-solid fa-phone"></i>
+        <p id="numerocontato" class="coisascontatos">(81) 9555-5555</p>
+      </div>
+
+      <div class="contatoItem">
+        <i class="fa-brands fa-instagram"></i>
+        <p id="igcontato" class="coisascontatos">@stayhub</p>
+      </div>
+  </div>
+    </footer>
+<!-- FOOTER FIM (COPIAR NO DE VCS) -->
+
+<!-- O SCRIPT DOS NEGOCIOS DO POPUP ESTAO AQUI (COPIAR NO DE VCS) -->
+  <script src="{% static 'core/script.js' %}"></script>
+  <script>
+    // Script específico para página de pagamento
+    (function() {
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      function finalizarPagamento() {
+        const botao = document.getElementById('botaoPagamentoRealizado');
+        if (!botao) {
+          console.error('Botão não encontrado');
+          return;
+        }
+
+        const mainElement = document.querySelector('.pagamento-main');
+        if (!mainElement) {
+          alert('Erro: Elemento não encontrado');
+          return;
+        }
+
+        const reservaId = parseInt(mainElement.getAttribute('data-reserva-id'));
+        if (isNaN(reservaId)) {
+          alert('Erro: ID da reserva inválido');
+          return;
+        }
+
+        const csrfToken = getCookie('csrftoken');
+        if (!csrfToken) {
+          alert('Erro: Token CSRF não encontrado. Recarregue a página.');
+          return;
+        }
+
+        // Desabilitar botão
+        botao.disabled = true;
+        botao.textContent = 'Processando...';
+
+        console.log('Enviando pagamento para reserva ID:', reservaId);
+
+        fetch('/api/finalizar-pagamento/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify({
+            reserva_id: reservaId
+          })
+        })
+        .then(response => {
+          console.log('Status da resposta:', response.status);
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || 'Erro no servidor');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Resposta:', data);
+          if (data.success) {
+            alert('Pagamento realizado com sucesso!');
+            window.location.href = '/quartos/';
+          } else {
+            alert('Erro: ' + (data.message || 'Erro desconhecido'));
+            botao.disabled = false;
+            botao.textContent = 'Pagamento Realizado';
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao processar pagamento: ' + error.message);
+          botao.disabled = false;
+          botao.textContent = 'Pagamento Realizado';
+        });
+      }
+
+      // Aguardar DOM carregar
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          const botao = document.getElementById('botaoPagamentoRealizado');
+          if (botao) {
+            botao.addEventListener('click', finalizarPagamento);
+            console.log('Botão de pagamento configurado!');
+          }
+        });
+      } else {
+        const botao = document.getElementById('botaoPagamentoRealizado');
+        if (botao) {
+          botao.addEventListener('click', finalizarPagamento);
+          console.log('Botão de pagamento configurado!');
+        }
+      }
+    })();
+  </script>
+  </body>
+</html>
+
