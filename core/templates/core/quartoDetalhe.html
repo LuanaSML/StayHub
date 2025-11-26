@@ -26,7 +26,7 @@
       </nav>
       <nav class="direita">
         {% if user.is_authenticated %}
-          <span class="usuario-logado">Olá, {{ user.first_name|default:user.username }}</span>
+          <span class="usuario-logado" id="btnMudarNome" style="cursor: pointer;">Olá, {{ user.first_name|default:user.username }}</span>
           <a class="sair" href="#" id="btnLogout">SAIR</a>
         {% else %}
           <a class="login" href="#" id="btnLogin">LOGIN</a>
@@ -83,6 +83,27 @@
       </div>
     </div>
 <!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
+
+
+<!-- POPUP MUDAR NOME (COPIAR NO DE VCS) -->
+    <div class="popup-overlay" id="popupoverlay-mudar-nome">
+      <div class="modal-content">
+        <button class="popupX" id="popupX-mudar-nome">&times;</button>
+        <h2 class="popup-titulo">MUDAR NOME DA CONTA</h2>
+        <form class="popup-form" id="formMudarNome">
+          {% csrf_token %}
+          <div class="popup-grupo">
+            <label for="novoNome">seu novo nome</label>
+            <input type="text" id="novoNome" name="novoNome" value="{{ user.first_name|default:user.username }}" required />
+          </div>
+          <div class="popup-botoes">
+            <button type="button" class="botao-manter" id="btnManterNome">MANTER IGUAL</button>
+            <button type="submit" class="registrar">CONFIRMAR MUDANÇA</button>
+          </div>
+        </form>
+      </div>
+    </div>
+<!-- POPUP MUDAR NOME FIM (COPIAR NO DE VCS) -->
 
 
 
@@ -154,8 +175,8 @@
   {% csrf_token %}
 
   <div id="tituloPrecoReserva">
-    <h2 class="precoReserva">{{ quarto.preco }}</h2>  
-    <p>Mensal</p>
+    <h2 class="precoReserva">R${{ quarto.preco }}</h2>  
+    <p class="precoMensal">mensal</p>
   </div>
 
   <div class="checkinEcheckout">
@@ -165,20 +186,23 @@
     </div>
 
     <div class="checkout">
-      <label for="checkout">Check-out</label>
+      <label for="checkout">Checkout</label>
       <input type="date" id="checkout" name="checkout" required>
     </div>
   </div>
 
   <div id="hospedesReserva">
-    <label for="hospedes">Hóspedes</label>
-    <select id="hospedes" name="hospedes" required>
-      <option value="1">1 hóspede</option>
-      <option value="2">2 hóspedes</option>
-      <option value="3">3 hóspedes</option>
-      <option value="4">4 hóspedes</option>
-      <option value="5">5 hóspedes</option>
-    </select>
+    <label for="hospedes">Hospedes</label>
+    <div class="hospedesSelectContainer">
+      <select id="hospedes" name="hospedes" required>
+        <option value="1">1 Hóspedes</option>
+        <option value="2">2 Hóspedes</option>
+        <option value="3">3 Hóspedes</option>
+        <option value="4">4 Hóspedes</option>
+        <option value="5">5 Hóspedes</option>
+      </select>
+      <i class="fa-solid fa-chevron-down hospedesChevron"></i>
+    </div>
   </div>
 
   <button type="submit" id="botaoReservar">Reservar</button>

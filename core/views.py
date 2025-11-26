@@ -1,4 +1,3 @@
-import requests
 import json
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,6 +10,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .models import Quarto, Reserva
 from django.contrib.auth.models import User
+
+try:
+    import requests
+except ImportError:
+    requests = None
 
 
 
@@ -25,46 +29,49 @@ def home(request):
     
     if not quartos:
         try:
-            api_key = settings.UNSPLASH_ACCESS_KEY
-            
-            if api_key and api_key != "None":  
-                url = "https://api.unsplash.com/search/photos"
-                params = {
-                    "query": "hotel room",
-                    "per_page": 15,
-                    "client_id": api_key
-                }
-                response = requests.get(url, params=params, timeout=5)
+            if requests is None:
+                print("Módulo 'requests' não instalado. Instale com: pip install requests")
+            else:
+                api_key = settings.UNSPLASH_ACCESS_KEY
                 
-                if response.status_code == 200:
-                    data = response.json()
-                    quartos_data = [
-                        {
-                            'nome': f'Quarto {i+1}',
-                            'preco': 200 + (i * 50),
-                            'imagem_url': img["urls"]["regular"],
-                            'descricao': img.get('description') or img.get('alt_description') or ''
-                        }
-                        for i, img in enumerate(data.get("results", []))
-                    ]
-                    # Persistir (ou recuperar) no banco para garantir IDs e paginação de detalhe
-                    quartos = []
-                    for item in quartos_data:
-                        try:
-                            obj, created = Quarto.objects.get_or_create(
-                                imagem_url=item['imagem_url'],
-                                defaults={
-                                    'nome': item['nome'],
-                                    'preco': item['preco'],
-                                    'descricao': item.get('descricao', '')
-                                }
-                            )
-                            quartos.append(obj)
-                        except Exception as e:
-                            # Se persistir falhar, adicione ao array como dict (fallback)
-                            print(f"Falha ao salvar Quarto: {e}")
-                            quartos.append(item)
-                    print("✓ Quartos carregados (API Unsplash) e sincronizados com o banco")
+                if api_key and api_key != "None":  
+                    url = "https://api.unsplash.com/search/photos"
+                    params = {
+                        "query": "hotel room",
+                        "per_page": 15,
+                        "client_id": api_key
+                    }
+                    response = requests.get(url, params=params, timeout=5)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        quartos_data = [
+                            {
+                                'nome': f'Quarto {i+1}',
+                                'preco': 200 + (i * 50),
+                                'imagem_url': img["urls"]["regular"],
+                                'descricao': img.get('description') or img.get('alt_description') or ''
+                            }
+                            for i, img in enumerate(data.get("results", []))
+                        ]
+                        # Persistir (ou recuperar) no banco para garantir IDs e paginação de detalhe
+                        quartos = []
+                        for item in quartos_data:
+                            try:
+                                obj, created = Quarto.objects.get_or_create(
+                                    imagem_url=item['imagem_url'],
+                                    defaults={
+                                        'nome': item['nome'],
+                                        'preco': item['preco'],
+                                        'descricao': item.get('descricao', '')
+                                    }
+                                )
+                                quartos.append(obj)
+                            except Exception as e:
+                                # Se persistir falhar, adicione ao array como dict (fallback)
+                                print(f"Falha ao salvar Quarto: {e}")
+                                quartos.append(item)
+                        print("✓ Quartos carregados (API Unsplash) e sincronizados com o banco")
         except Exception as e:
             print(f"Erro ao buscar API Unsplash: {e}")
        
@@ -112,6 +119,37 @@ def criar_reserva(request):
         # Validar datas
         if checkout <= checkin:
             return JsonResponse({'success': False, 'message': 'A data de check-out deve ser posterior à data de check-in.'}, status=400)
+        
+        # Verificar se já existe uma reserva para o mesmo quarto nas mesmas datas (ou datas que se sobrepõem)
+        # Uma reserva conflita se: (novo_checkin < existente_checkout) AND (novo_checkout > existente_checkin)
+        reservas_existentes = Reserva.objects.filter(
+            quarto=quarto
+        ).filter(
+            checkin__lt=checkout,
+            checkout__gt=checkin
+        )
+        
+        if reservas_existentes.exists():
+            reserva_existente = reservas_existentes.first()
+            return JsonResponse({
+                'success': False, 
+                'message': f'Este quarto já está reservado de {reserva_existente.checkin.strftime("%d/%m/%Y")} a {reserva_existente.checkout.strftime("%d/%m/%Y")}. Escolha outras datas.'
+            }, status=400)
+        
+        # Verificar se o mesmo usuário já tem uma reserva para o mesmo quarto nas mesmas datas
+        reservas_usuario = Reserva.objects.filter(
+            usuario=request.user,
+            quarto=quarto
+        ).filter(
+            checkin__lt=checkout,
+            checkout__gt=checkin
+        )
+        
+        if reservas_usuario.exists():
+            return JsonResponse({
+                'success': False, 
+                'message': 'Você já possui uma reserva para este quarto neste período. Escolha outras datas.'
+            }, status=400)
         
         # Calcular valor total (preço do quarto * número de dias)
         dias = (checkout - checkin).days
@@ -285,10 +323,89 @@ def login_view(request):
     except Exception as e:
         return JsonResponse({'success': False, 'message': f'Erro ao fazer login: {str(e)}'}, status=500)
 
+@csrf_exempt
+@require_http_methods(["POST"])
 def logout_view(request):
-    """View para logout de usuários"""
+    """View para logout de usuários via API"""
     from django.contrib.auth import logout
     if request.user.is_authenticated:
         logout(request)
-        messages.success(request, 'Você foi desconectado com sucesso.')
-    return redirect('home')
+        return JsonResponse({
+            'success': True,
+            'message': 'Você foi desconectado com sucesso.'
+        })
+    return JsonResponse({
+        'success': False,
+        'message': 'Você não está logado.'
+    }, status=400)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def mudar_nome(request):
+    """View para mudar o nome do usuário"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Você precisa estar logado.'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        novo_nome = data.get('novo_nome', '').strip()
+        
+        if not novo_nome:
+            return JsonResponse({'success': False, 'message': 'O nome não pode estar vazio.'}, status=400)
+        
+        # Atualizar o nome do usuário
+        request.user.first_name = novo_nome
+        request.user.save()
+        
+        print(f"✓ Nome atualizado: {request.user.username} -> {novo_nome}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Nome atualizado com sucesso!',
+            'novo_nome': novo_nome
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'message': 'Erro ao processar os dados.'}, status=400)
+    except Exception as e:
+        print(f"✗ Erro ao mudar nome: {e}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'success': False, 'message': f'Erro ao atualizar nome: {str(e)}'}, status=500)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def eliminar_reserva(request):
+    """View para eliminar uma reserva"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Você precisa estar logado.'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        reserva_id = data.get('reserva_id')
+        
+        if not reserva_id:
+            return JsonResponse({'success': False, 'message': 'ID da reserva não fornecido.'}, status=400)
+        
+        try:
+            reserva = Reserva.objects.get(pk=reserva_id, usuario=request.user)
+        except Reserva.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Reserva não encontrada.'}, status=404)
+        
+        # Deletar a reserva (isso libera as datas automaticamente)
+        reserva.delete()
+        
+        print(f"✓ Reserva {reserva_id} eliminada por usuário {request.user.username}")
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Reserva eliminada com sucesso!'
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'message': 'Erro ao processar os dados.'}, status=400)
+    except Exception as e:
+        print(f"✗ Erro ao eliminar reserva: {e}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'success': False, 'message': f'Erro ao eliminar reserva: {str(e)}'}, status=500)

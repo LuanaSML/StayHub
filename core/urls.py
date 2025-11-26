@@ -12,4 +12,6 @@ urlpatterns = [
     path('api/reserva/', views.criar_reserva, name='criar_reserva'),
     path('pagamento/<int:reserva_id>/', views.pagamento, name='pagamento'),
     path('api/finalizar-pagamento/', views.finalizar_pagamento, name='finalizar_pagamento'),
+    path('api/eliminar-reserva/', views.eliminar_reserva, name='eliminar_reserva'),
+    path('api/mudar-nome/', views.mudar_nome, name='mudar_nome'),
 ]

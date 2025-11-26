@@ -23,7 +23,7 @@
       </nav>
       <nav class="direita">
         {% if user.is_authenticated %}
-          <span class="usuario-logado">Olá, {{ user.first_name|default:user.username }}</span>
+          <span class="usuario-logado" id="btnMudarNome" style="cursor: pointer;">Olá, {{ user.first_name|default:user.username }}</span>
           <a class="sair" href="#" id="btnLogout">SAIR</a>
         {% else %}
           <a class="login" href="#" id="btnLogin">LOGIN</a>
@@ -82,6 +82,27 @@
 <!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
 
 
+<!-- POPUP MUDAR NOME (COPIAR NO DE VCS) -->
+    <div class="popup-overlay" id="popupoverlay-mudar-nome">
+      <div class="modal-content">
+        <button class="popupX" id="popupX-mudar-nome">&times;</button>
+        <h2 class="popup-titulo">MUDAR NOME DA CONTA</h2>
+        <form class="popup-form" id="formMudarNome">
+          {% csrf_token %}
+          <div class="popup-grupo">
+            <label for="novoNome">seu novo nome</label>
+            <input type="text" id="novoNome" name="novoNome" value="{{ user.first_name|default:user.username }}" required />
+          </div>
+          <div class="popup-botoes">
+            <button type="button" class="botao-manter" id="btnManterNome">MANTER IGUAL</button>
+            <button type="submit" class="registrar">CONFIRMAR MUDANÇA</button>
+          </div>
+        </form>
+      </div>
+    </div>
+<!-- POPUP MUDAR NOME FIM (COPIAR NO DE VCS) -->
+
+
 <!-- CONTEÚDO DA PÁGINA DE PAGAMENTO -->
 <main class="pagamentoContainer" data-reserva-id="{{ reserva.id }}">
   {% if reserva %}
@@ -95,6 +116,9 @@
     </div>
 
     <div class="pagamentoConteudo">
+
+
+
       <!-- ESQUERDA-->
       <div class="pagamentoEsquerda">
         <h2 class="pagamentoSubtitulo">Sua viagem</h2>
@@ -116,13 +140,22 @@
         </button>
       </div>
 
-      <!-- Lado Direito: Card com Imagem e Total -->
+
+
+
+      <!-- DIREITA -->
       <div class="pagamentoDireita">
         <div class="pagamentoCard">
           <div class="pagamentoImagemQuarto" style="background-image: url('{{ reserva.quarto.imagem_url }}');"></div>
           
           <div class="pagamentoCardInfo">
-            <p class="pagamentoCardDescricao">Espaço inteiro: apartamento em Recife, Brasil</p>
+            <p class="pagamentoCardDescricao">
+              {% if reserva.quarto.descricao %}
+                {{ reserva.quarto.descricao }}
+              {% else %}
+                {{ reserva.quarto.nome }}
+              {% endif %}
+            </p>
             <div class="pagamentoDivisor"></div>
             <div class="pagamentoTotalContainer">
               <span class="pagamentoTotalLabel">Seu Total</span>
@@ -132,6 +165,9 @@
         </div>
       </div>
     </div>
+
+
+
   {% else %}
     <div class="pagamentoErroContainer">
       <p class="pagamentoErroMensagem">Erro: Reserva não encontrada</p>
@@ -139,7 +175,7 @@
     </div>
   {% endif %}
 </main>
-<!-- FIM DO CONTEÚDO -->
+<!-- FIM (NAO COPIAR)-->
 
 
 <!-- FOOTER (COPIAR NO DE VCS) -->

@@ -113,6 +113,47 @@ function fazerCadastro(nome, email, senha) {
     });
 }
 
+// Função para mudar nome do usuário
+function mudarNomeUsuario(novoNome) {
+  const overlayMudarNome = document.getElementById("popupoverlay-mudar-nome");
+
+  fetch("/api/mudar-nome/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCsrfToken(),
+    },
+    body: JSON.stringify({
+      novo_nome: novoNome,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        // Fechar popup
+        if (overlayMudarNome) {
+          overlayMudarNome.classList.remove("active");
+        }
+        // Atualizar nome no header
+        const usuarioLogado = document.querySelector(".usuario-logado");
+        if (usuarioLogado) {
+          usuarioLogado.textContent = `Olá, ${data.novo_nome}`;
+        }
+        // Recarregar página para garantir sincronização
+        window.location.reload();
+      } else {
+        mostrarErro(overlayMudarNome, data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Erro:", error);
+      mostrarErro(
+        overlayMudarNome,
+        "Erro ao conectar com o servidor. Tente novamente."
+      );
+    });
+}
+
 // Função para fazer login
 function fazerLogin(email, senha) {
   const overlayLogin = document.getElementById("popupoverlay-login");
@@ -154,24 +195,38 @@ function fazerLogin(email, senha) {
 
 // Função para fazer logout
 function fazerLogout() {
+  const csrfToken = getCsrfToken();
+  if (!csrfToken) {
+    alert('Erro: Token CSRF não encontrado. Por favor, recarregue a página.');
+    return;
+  }
+
   fetch("/api/logout/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCsrfToken(),
+      "X-CSRFToken": csrfToken,
     },
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro na resposta do servidor: ' + response.status);
+      }
+      return response.json();
+    })
     .then((data) => {
       if (data.success) {
         // Atualizar header
         updateHeader(null);
         // Recarregar página
         window.location.reload();
+      } else {
+        alert('Erro ao fazer logout: ' + (data.message || 'Erro desconhecido'));
       }
     })
     .catch((error) => {
       console.error("Erro ao fazer logout:", error);
+      alert('Erro ao conectar com o servidor. Tente novamente.');
     });
 }
 
@@ -203,14 +258,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // Overlays
   const overlayCadastro = document.getElementById("popupoverlay");
   const overlayLogin = document.getElementById("popupoverlay-login");
+  const overlayMudarNome = document.getElementById("popupoverlay-mudar-nome");
 
   // Buttons that open modals
   const btnCadastro = document.getElementById("btnCadastro");
   const btnLogin = document.getElementById("btnLogin");
+  const btnMudarNome = document.getElementById("btnMudarNome");
 
   // Close buttons
   const btnXCadastro = document.getElementById("popupX");
   const btnXLogin = document.getElementById("popupX-login");
+  const btnXMudarNome = document.getElementById("popupX-mudar-nome");
 
   // Setup popup buttons
   setupPopupButtons();
@@ -243,6 +301,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Open mudar nome popup
+  if (btnMudarNome && overlayMudarNome) {
+    btnMudarNome.addEventListener("click", function (e) {
+      e.preventDefault();
+      overlayMudarNome.classList.add("active");
+    });
+  }
+
+  // Close mudar nome with X
+  if (btnXMudarNome && overlayMudarNome) {
+    btnXMudarNome.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      overlayMudarNome.classList.remove("active");
+      const mensagemErro = overlayMudarNome.querySelector(".mensagem-erro");
+      if (mensagemErro) {
+        mensagemErro.remove();
+      }
+    });
+  }
+
   // Close when clicking on each overlay outside modal-content
   if (overlayCadastro) {
     overlayCadastro.addEventListener("click", function (e) {
@@ -262,6 +341,17 @@ document.addEventListener("DOMContentLoaded", function () {
         overlayLogin.classList.remove("active");
         // Limpar mensagens de erro
         const mensagemErro = overlayLogin.querySelector(".mensagem-erro");
+        if (mensagemErro) {
+          mensagemErro.remove();
+        }
+      }
+    });
+  }
+  if (overlayMudarNome) {
+    overlayMudarNome.addEventListener("click", function (e) {
+      if (e.target === overlayMudarNome) {
+        overlayMudarNome.classList.remove("active");
+        const mensagemErro = overlayMudarNome.querySelector(".mensagem-erro");
         if (mensagemErro) {
           mensagemErro.remove();
         }
@@ -312,6 +402,27 @@ document.addEventListener("DOMContentLoaded", function () {
     btnLogout.addEventListener("click", function (e) {
       e.preventDefault();
       fazerLogout();
+    });
+  }
+
+  // Formulário de mudar nome
+  const formMudarNome = document.getElementById("formMudarNome");
+  if (formMudarNome) {
+    formMudarNome.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const novoNome = document.getElementById("novoNome").value.trim();
+      if (novoNome) {
+        mudarNomeUsuario(novoNome);
+      }
+    });
+  }
+
+  // Botão manter nome
+  const btnManterNome = document.getElementById("btnManterNome");
+  if (btnManterNome && overlayMudarNome) {
+    btnManterNome.addEventListener("click", function (e) {
+      e.preventDefault();
+      overlayMudarNome.classList.remove("active");
     });
   }
 
@@ -650,3 +761,148 @@ setTimeout(function() {
         }
       }
     })();
+
+// Função para eliminar reserva
+function eliminarReserva(reservaId) {
+  if (!confirm('Tem certeza que deseja eliminar esta reserva?')) {
+    return;
+  }
+
+  const csrfToken = getCsrfToken();
+  if (!csrfToken) {
+    alert('Erro: Token CSRF não encontrado. Por favor, recarregue a página.');
+    return;
+  }
+
+  const reservaCard = document.querySelector(`.reserva-card[data-reserva-id="${reservaId}"]`);
+  if (reservaCard) {
+    reservaCard.style.opacity = '0.5';
+    reservaCard.style.pointerEvents = 'none';
+  }
+
+  fetch('/api/eliminar-reserva/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    body: JSON.stringify({
+      reserva_id: reservaId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      if (reservaCard) {
+        reservaCard.remove();
+      }
+      alert('Reserva eliminada com sucesso!');
+      // Recarregar a página para atualizar a lista
+      window.location.reload();
+    } else {
+      alert('Erro ao eliminar reserva: ' + (data.message || 'Erro desconhecido'));
+      if (reservaCard) {
+        reservaCard.style.opacity = '1';
+        reservaCard.style.pointerEvents = 'auto';
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Erro:', error);
+    alert('Erro ao conectar com o servidor. Tente novamente.');
+    if (reservaCard) {
+      reservaCard.style.opacity = '1';
+      reservaCard.style.pointerEvents = 'auto';
+    }
+  });
+}
+
+// Configurar botões de eliminar reserva
+function configurarBotoesEliminar() {
+  const botoesEliminar = document.querySelectorAll('.reserva-botao-eliminar');
+  console.log('Botões de eliminar encontrados:', botoesEliminar.length);
+  
+  botoesEliminar.forEach(botao => {
+    // Verificar se já tem event listener para evitar duplicação
+    if (botao.hasAttribute('data-listener-attached')) {
+      return;
+    }
+    
+    botao.setAttribute('data-listener-attached', 'true');
+    
+    botao.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const reservaId = this.getAttribute('data-reserva-id');
+      console.log('Botão de eliminar clicado, reserva ID:', reservaId);
+      if (reservaId) {
+        eliminarReserva(parseInt(reservaId));
+      } else {
+        console.error('ID da reserva não encontrado no botão');
+      }
+    });
+  });
+}
+
+// Executar quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    configurarBotoesEliminar();
+  });
+} else {
+  // DOM já carregado
+  configurarBotoesEliminar();
+}
+
+// Também tentar após um pequeno delay (caso o conteúdo seja carregado dinamicamente)
+setTimeout(configurarBotoesEliminar, 500);
+
+// Função para ordenar quartos por preço
+function ordenarQuartosPorPreco(ordem) {
+  const container = document.getElementById('containerQuartos');
+  if (!container) return;
+
+  const quadrados = Array.from(container.querySelectorAll('.quadrado'));
+  
+  if (quadrados.length === 0) return;
+
+  quadrados.sort((a, b) => {
+    const precoA = parseFloat(a.getAttribute('data-preco')) || 0;
+    const precoB = parseFloat(b.getAttribute('data-preco')) || 0;
+    
+    if (ordem === 'menor-maior') {
+      return precoA - precoB;
+    } else if (ordem === 'maior-menor') {
+      return precoB - precoA;
+    }
+    return 0;
+  });
+
+  // Limpar container
+  container.innerHTML = '';
+  
+  // Adicionar quadrados na nova ordem
+  quadrados.forEach(quadrado => {
+    container.appendChild(quadrado);
+  });
+}
+
+// Configurar filtro de preço
+function configurarFiltroPreco() {
+  const filtroPreco = document.getElementById('filtroPreco');
+  if (filtroPreco) {
+    filtroPreco.addEventListener('change', function() {
+      const ordem = this.value;
+      if (ordem) {
+        ordenarQuartosPorPreco(ordem);
+      }
+    });
+  }
+}
+
+// Executar quando o DOM estiver pronto
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', configurarFiltroPreco);
+} else {
+  configurarFiltroPreco();
+}

@@ -12,6 +12,10 @@ body {
     padding-top: 120px;
 }
 
+main {
+    flex: 1;
+}
+
 
 
 /* TUDO DO HEADER*/
@@ -24,6 +28,7 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 1000;
 }
 
 .logo {
@@ -48,7 +53,6 @@ nav.esquerda a {
     font-weight: 800;
     font-size: 14px; 
     letter-spacing: 1px;
-
 }
 
 nav.direita {
@@ -59,7 +63,15 @@ nav.direita {
     margin-right: 35px;
 }
 
-.login, .criar{
+.usuario-logado {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px; 
+    letter-spacing: 1px;
+}
+
+.login, .criar, .sair {
     text-decoration: none;
     padding: 8px 16px; 
     border-radius: 8px;
@@ -70,7 +82,8 @@ nav.direita {
 }
 
 nav.esquerda a,
-.login, .criar{
+.usuario-logado,
+.login, .criar, .sair {
     transition: color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
     cursor: pointer;
 }
@@ -79,7 +92,7 @@ nav.esquerda a:hover {
     color: #043b51; 
 }
 
-.login:hover {
+.login:hover, .sair:hover {
     background-color: #ffffff; 
     box-shadow: 0 2px 6px rgba(4,59,81,0.12);
 }
@@ -210,6 +223,40 @@ nav.esquerda a:hover {
     margin-top: 10px;
     transition: background-color 0.2s ease;
 }
+
+.registrar:hover {
+    background-color: #005a8a;
+}
+
+.popup-botoes {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.popup-botoes .registrar {
+    flex: 1;
+    margin-top: 0;
+}
+
+.botao-manter {
+    background-color: #006EA1;
+    color: #ffffff;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.2s ease;
+    flex: 1;
+}
+
+.botao-manter:hover {
+    background-color: #005a8a;
+}
 /* FIM DO POPUP */
 
 
@@ -223,9 +270,8 @@ nav.esquerda a:hover {
 
 footer {
     background-color: #006EA1;
-    margin-top: auto; 
+    margin-top: auto;
     padding: 10px 8px;
-    margin-top: 3%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -313,6 +359,37 @@ footer {
     margin-top: 3%;
 }
 
+.filtroPrecoContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 5%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.filtroPrecoLabel {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+.filtroPreco {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #000;
+    cursor: pointer;
+    min-width: 250px;
+}
+
+.filtroPreco:focus {
+    outline: none;
+    border-color: #006EA1;
+}
+
 .quadradosDosQuartos {
 display: flex;
 flex-direction: row;
@@ -326,12 +403,14 @@ margin-top: -10px;
 .quadrado {
 border-radius: 8px;
 width: calc(16% - 6px);
-
+position: relative;
+z-index: 1;
 }
 
 .quadrado:hover  {
 box-shadow: 0 8px 22px rgba(28, 25, 53, 0.12);
 transform: translateY(-7px);
+z-index: 2;
 }
 
 .quartoLink {
@@ -513,38 +592,156 @@ gap: 15px;
  
 
 #formReserva{
-    padding: 20px;
-    gap: 15px;
+    padding: 24px;
+    gap: 16px;
     display: flex;
     flex-direction: column;
-    box-shadow: 10px 10px 10px rgba(28, 25, 53, 0.12);
+    box-shadow: 0 1px 20px rgb(98, 98, 98);
     width: 350px;
     height: auto;
-    border: 1px solid #c7c7c7; 
-    border-radius: 20px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 12px;
     margin-left: 73%;
-    margin-top: -17%;
+    margin-top: -19%;
     margin-bottom: 7%;
+}
+
+#tituloPrecoReserva {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 0;
+}
+
+.precoReserva {
+    font-size: 28px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.precoMensal {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    font-weight: normal;
 }
 
 .checkinEcheckout {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     gap: 0;
+    border: 1px solid #000;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 12px;
+    margin-top: 0;
 }
 
 .checkin, .checkout {
     display: flex;
     flex-direction: column;
-    flex: 1; 
-    border: 1px solid #ddd;
+    flex: 1;
+    gap: 8px;
+}
+
+.checkin {
+    border-right: 1px solid #000;
+    padding-right: 12px;
+}
+
+.checkout {
+    padding-left: 12px;
+}
+
+.checkin label, .checkout label {
+    font-size: 14px;
+    font-weight: normal;
+    color: #000;
+    margin: 0;
 }
 
 .checkin input, .checkout input {
-    padding: 10px;
-    border-radius: 8px;
-    border: 0;
+    padding: 8px 0;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #000;
+    outline: none;
 }
+
+#hospedesReserva {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid #000;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 12px;
+    margin-top: -17px;
+}
+
+#hospedesReserva label {
+    font-size: 14px;
+    font-weight: normal;
+    color: #000;
+    margin: 0;
+}
+
+.hospedesSelectContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#hospedes {
+    flex: 1;
+    padding: 8px 20px 8px 0;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #000;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.hospedesChevron {
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    color: #000;
+    pointer-events: none;
+}
+
+#botaoReservar {
+    background-color: #006EA1;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 0;
+    transition: background-color 0.3s ease;
+}
+
+#botaoReservar:hover {
+    background-color: #005a8a;
+}
+
 
 /*QUARTO DETALHES FINAL (QUANDO A GENTE FAZ CLICK NO QUARTO) */
 
@@ -553,17 +750,142 @@ gap: 15px;
 
 /*QUARTOS INICIO */
 
+.CantoDosQuartos {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 #CantoQuadradosCaixa {
     background-color: #006EA1;
     border-radius: 10px;
     display: flex;
     align-items: center;
-    padding: 15px 20px;   
+    padding: 15px 20px;
+    margin-bottom: 20px;
 }
 
 #CantoQuadradosCaixa h2 {
-    margin: 0;           
-    color: white;        
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 24px;
+}
+
+.reservasLista {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.reserva-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #F6F6F6;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(43, 43, 43, 0.08);
+    border: 1px solid #e5e5e5;
+    overflow: hidden;
+}
+
+.reserva-imagem {
+    width: 200px;
+    height: 150px;
+    min-width: 200px;
+    border-radius: 16px 0 0 16px;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    display: block;
+}
+
+.reserva-imagem[style*="background-color"] {
+    background-color: #e5e5e5;
+}
+
+.reserva-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.reserva-detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.reserva-descricao {
+    margin: 0;
+    font-size: 16px;
+    color: #000;
+    line-height: 1.5;
+    font-weight: normal;
+}
+
+.reserva-datas {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.reserva-botao-eliminar {
+    background: #006EA1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+    min-width: 50px;
+    margin-right: 20px;
+    height: 45px;
+}
+
+.reserva-botao-eliminar:hover {
+    background: #005a8a;
+}
+
+.reserva-botao-eliminar:active {
+    background: #004d73;
+}
+
+.sem-reservas-card {
+    text-align: center;
+    padding: 40px 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e5e5;
+}
+
+.sem-reservas-texto {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #666;
+    font-weight: bold;
+}
+
+.sem-reservas-emoticon {
+    font-size: 40px;
+    margin-top: 20px;
 }
 
 /* INICIO PÁGINA DE PAGAMENTO */

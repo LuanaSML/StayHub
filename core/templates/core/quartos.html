@@ -25,7 +25,7 @@
       </nav>
       <nav class="direita">
         {% if user.is_authenticated %}
-          <span class="usuario-logado">Olá, {{ user.first_name|default:user.username }}</span>
+          <span class="usuario-logado" id="btnMudarNome" style="cursor: pointer;">Olá, {{ user.first_name|default:user.username }}</span>
           <a class="sair" href="#" id="btnLogout">SAIR</a>
         {% else %}
           <a class="login" href="#" id="btnLogin">LOGIN</a>
@@ -84,6 +84,27 @@
 <!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
 
 
+<!-- POPUP MUDAR NOME (COPIAR NO DE VCS) -->
+    <div class="popup-overlay" id="popupoverlay-mudar-nome">
+      <div class="modal-content">
+        <button class="popupX" id="popupX-mudar-nome">&times;</button>
+        <h2 class="popup-titulo">MUDAR NOME DA CONTA</h2>
+        <form class="popup-form" id="formMudarNome">
+          {% csrf_token %}
+          <div class="popup-grupo">
+            <label for="novoNome">seu novo nome</label>
+            <input type="text" id="novoNome" name="novoNome" value="{{ user.first_name|default:user.username }}" required />
+          </div>
+          <div class="popup-botoes">
+            <button type="button" class="botao-manter" id="btnManterNome">MANTER IGUAL</button>
+            <button type="submit" class="registrar">CONFIRMAR MUDANÇA</button>
+          </div>
+        </form>
+      </div>
+    </div>
+<!-- POPUP MUDAR NOME FIM (COPIAR NO DE VCS) -->
+
+
 
 
 
@@ -92,23 +113,38 @@
 
 <main class="CantoDosQuartos">
     <section id="CantoQuadradosCaixa">
-      
-        <h2>QUARTOS RESERVADOS</h2>
+        <h2>QUARTOS RESERVADOS:</h2>
+    </section>
+    
+    <div class="reservasLista">
         {% if user.is_authenticated %}
           {% if reservas %}
             {% for reserva in reservas %}
-              <div class="reserva-card">
+              <div class="reserva-card" data-reserva-id="{{ reserva.id }}">
                 {% if reserva.quarto.imagem_url %}
                   <img src="{{ reserva.quarto.imagem_url }}" alt="{{ reserva.quarto.nome }}" class="reserva-imagem" />
                 {% else %}
                   <div class="reserva-imagem" style="background-color: #ddd;"></div>
                 {% endif %}
                 <div class="reserva-info">
-                  <h3 class="reserva-titulo">{{ reserva.quarto.nome }}</h3>
-                  {% if reserva.quarto.descricao %}
-                    <p class="reserva-descricao">{{ reserva.quarto.descricao }}</p>
-                  {% endif %}
+                  <div class="reserva-detalhes">
+                    <p class="reserva-descricao">
+                      {% if reserva.quarto.descricao %}
+                        {{ reserva.quarto.descricao }}
+                      {% else %}
+                        {{ reserva.quarto.nome }}
+                      {% endif %}
+                    </p>
+                    <p class="reserva-datas">
+                      {% with checkin=reserva.checkin checkout=reserva.checkout %}
+                        {{ checkin|date:"d" }} de {{ checkin|date:"M"|lower|slice:":3" }} - {{ checkout|date:"d" }} de {{ checkout|date:"M"|lower|slice:":3" }}
+                      {% endwith %}
+                    </p>
+                  </div>
                 </div>
+                <button type="button" class="reserva-botao-eliminar" data-reserva-id="{{ reserva.id }}">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
               </div>
             {% endfor %}
 
@@ -131,7 +167,7 @@
             <p class="sem-reservas-emoticon">:/</p>
           </div>
         {% endif %}
-    </section>
+    </div>
  </main>
 
 

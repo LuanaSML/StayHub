@@ -25,7 +25,7 @@
       </nav>
       <nav class="direita">
         {% if user.is_authenticated %}
-          <span class="usuario-logado">Olá, {{ user.first_name|default:user.username }}</span>
+          <span class="usuario-logado" id="btnMudarNome" style="cursor: pointer;">Olá, {{ user.first_name|default:user.username }}</span>
           <a class="sair" href="#" id="btnLogout">SAIR</a>
         {% else %}
           <a class="login" href="#" id="btnLogin">LOGIN</a>
@@ -82,15 +82,45 @@
       </div>
     </div>
 <!-- POPUP LOGIN FIM (COPIAR NO DE VCS) -->
+
+
+<!-- POPUP MUDAR NOME (COPIAR NO DE VCS) -->
+    <div class="popup-overlay" id="popupoverlay-mudar-nome">
+      <div class="modal-content">
+        <button class="popupX" id="popupX-mudar-nome">&times;</button>
+        <h2 class="popup-titulo">MUDAR NOME DA CONTA</h2>
+        <form class="popup-form" id="formMudarNome">
+          {% csrf_token %}
+          <div class="popup-grupo">
+            <label for="novoNome">seu novo nome</label>
+            <input type="text" id="novoNome" name="novoNome" value="{{ user.first_name|default:user.username }}" required />
+          </div>
+          <div class="popup-botoes">
+            <button type="button" class="botao-manter" id="btnManterNome">MANTER IGUAL</button>
+            <button type="submit" class="registrar">CONFIRMAR MUDANÇA</button>
+          </div>
+        </form>
+      </div>
+    </div>
+<!-- POPUP MUDAR NOME FIM (COPIAR NO DE VCS) -->
     
 <!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
 <!-- Quem for mecher em negocio do api ele esta na pasta de views.py do core -->
 <h2 id="tituloHome"> Acomodacoes proximas a voce </h2>
 
-<main class="quadradosDosQuartos">
+<div class="filtroPrecoContainer">
+  <label for="filtroPreco" class="filtroPrecoLabel">Ordenar por preço:</label>
+  <select id="filtroPreco" class="filtroPreco">
+    <option value="">Selecione...</option>
+    <option value="menor-maior">Mais barato a mais caro</option>
+    <option value="maior-menor">Mais caro a mais barato</option>
+  </select>
+</div>
+
+<main class="quadradosDosQuartos" id="containerQuartos">
   {% if quartos %}
     {% for quarto in quartos %}
-      <div class="quadrado">
+      <div class="quadrado" data-preco="{{ quarto.preco }}">
         <a href="{% url 'quartoDetalhe' quarto.id %}" class="quartoLink">
           <div class="quarto" style="background-image: url('{{ quarto.imagem_url }}'); background-size: cover; background-position: center;"></div>
           <h4 class="textoQuadrado" id="textoQuadradoTitulo">{{ quarto.nome }}</h4>
