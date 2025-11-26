@@ -522,7 +522,6 @@ gap: 15px;
 
 #CantoQuadradosCaixa {
     padding: 40px !important;
-    border: 2px solid yellow !important;
     background-color: #006EA1 !important;
 }
 
@@ -601,142 +600,199 @@ gap: 15px;
     font-size: 20px;
 }
 
-/* ESTILOS DA PÁGINA DE PAGAMENTO */
 
-body .pagamento-main {
-    padding: 40px 20px !important;
-    max-width: 1000px !important;
-    margin: 0 auto !important;
-    flex: 1 !important;
-    display: block !important;
-    background-color: transparent !important;
+
+
+
+
+
+
+
+
+
+/* INICIOPÁGINA DE PAGAMENTO */
+
+.pagamento-main {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex: 1;
+    display: block;
+    background-color: transparent;
 }
 
-body .pagamento-main .pagamento-voltar {
-    display: inline-flex !important;
-    align-items: center !important;
-    margin-bottom: 20px !important;
-    text-decoration: none !important;
-    color: inherit !important;
+.pagamento-main .pagamento-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 15px;
 }
 
-body .pagamento-main .pagamento-voltar i {
-    margin-right: 10px !important;
+.pagamento-main .pagamento-voltar {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    font-size: 20px;
 }
 
-body .pagamento-main .pagamento-titulo {
-    margin-bottom: 30px !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
+.pagamento-main .pagamento-voltar i {
+    margin-right: 0;
 }
 
-body .pagamento-main .pagamento-container {
-    display: flex !important;
-    gap: 30px !important;
-    flex-wrap: wrap !important;
+.pagamento-main .pagamento-titulo {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: lowercase;
 }
 
-body .pagamento-main .pagamento-imagem-container {
-    flex: 1 !important;
-    min-width: 300px !important;
+.pagamento-main .pagamento-container {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
-body .pagamento-main .pagamento-imagem-quarto {
-    background-size: cover !important;
-    background-position: center !important;
-    width: 100% !important;
-    height: 400px !important;
-    border-radius: 8px !important;
-    margin-bottom: 20px !important;
+/* ESquerda*/
+.pagamento-main .pagamento-esquerda {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
 }
 
-body .pagamento-main .pagamento-info-container {
-    flex: 1 !important;
-    min-width: 300px !important;
+.pagamento-main .pagamento-subtitulo {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #000;
 }
 
-body .pagamento-main .pagamento-info-box {
-    background: #f5f5f5 !important;
-    padding: 30px !important;
-    border-radius: 8px !important;
+.pagamento-main .pagamento-info-item {
+    margin-bottom: 25px;
 }
 
-body .pagamento-main .pagamento-info-box h2 {
-    margin-bottom: 20px !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
+.pagamento-main .pagamento-info-label {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+    text-transform: capitalize;
 }
 
-body .pagamento-main .pagamento-info-item {
-    margin-bottom: 15px !important;
+.pagamento-main .pagamento-info-value {
+    font-size: 16px;
+    color: #000;
+    font-weight: normal;
 }
 
-body .pagamento-main .pagamento-info-item strong {
-    display: block !important;
-    margin-bottom: 5px !important;
-    font-weight: bold !important;
+.pagamento-main .pagamento-botao {
+    width: 100%;
+    padding: 18px 30px;
+    margin-top: 30px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-body .pagamento-main .pagamento-total-container {
-    margin-top: 30px !important;
-    padding-top: 20px !important;
-    border-top: 2px solid #ddd !important;
+.pagamento-main .pagamento-botao:hover {
+    background: #006EA1;
 }
 
-body .pagamento-main .pagamento-total-label {
-    display: block !important;
-    margin-bottom: 10px !important;
-    font-size: 18px !important;
-    font-weight: bold !important;
+.pagamento-main .pagamento-botao:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
 }
 
-body .pagamento-main .pagamento-total-valor {
-    font-size: 28px !important;
-    font-weight: bold !important;
-    color: #007bff !important;
+/* DIREITA */
+.pagamento-main .pagamento-direita {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
 }
 
-#botaoPagamentoRealizado {
-    width: 100% !important;
-    padding: 15px !important;
-    margin-top: 30px !important;
-    background: #007bff !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 8px !important;
-    font-size: 18px !important;
-    cursor: pointer !important;
-    font-weight: bold !important;
+.pagamento-main .pagamento-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-#botaoPagamentoRealizado:hover {
-    background: #0056b3 !important;
+.pagamento-main .pagamento-imagem-quarto {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 0;
+    margin: 0;
 }
 
-#botaoPagamentoRealizado:disabled {
-    background: #6c757d !important;
-    cursor: not-allowed !important;
+.pagamento-main .pagamento-card-info {
+    padding: 20px;
+}
+
+.pagamento-main .pagamento-card-descricao {
+    font-size: 16px;
+    color: #000;
+    margin: 0 0 20px 0;
+    line-height: 1.5;
+}
+
+.pagamento-main .pagamento-divisor {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 20px 0;
+}
+
+.pagamento-main .pagamento-total-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.pagamento-main .pagamento-total-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+}
+
+.pagamento-main .pagamento-total-valor {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
 }
 
 .pagamento-erro-container {
-    text-align: center !important;
-    padding: 40px !important;
+    text-align: center;
+    padding: 40px;
 }
 
 .pagamento-erro-mensagem {
-    color: red !important;
-    font-size: 18px !important;
+    color: red;
+    font-size: 18px;
 }
 
 .pagamento-erro-link {
-    display: inline-block !important;
-    margin-top: 20px !important;
-    padding: 10px 20px !important;
-    background: #007bff !important;
-    color: white !important;
-    text-decoration: none !important;
-    border-radius: 5px !important;
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
 }
+
 
 /* FIM ESTILOS DA PÁGINA DE PAGAMENTO */
 

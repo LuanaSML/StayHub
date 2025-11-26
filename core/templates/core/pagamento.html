@@ -85,52 +85,54 @@
 <!-- CONTEÚDO DA PÁGINA DE PAGAMENTO -->
 <main class="pagamento-main" data-reserva-id="{{ reserva.id }}">
   {% if reserva %}
-    <a href="{% url 'quartoDetalhe' reserva.quarto.id %}" class="pagamento-voltar">
-      <i class="fa-solid fa-arrow-left"></i>
-      <span>Voltar ao quarto</span>
-    </a>
-
-    <h1 class="pagamento-titulo">Pagamento</h1>
+    <div class="pagamento-header">
+      <a href="{% url 'quartoDetalhe' reserva.quarto.id %}" class="pagamento-voltar">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <h1 class="pagamento-titulo">pagamento</h1>
+    </div>
 
     <div class="pagamento-container">
-      <!-- Imagem do quarto -->
-      <div class="pagamento-imagem-container">
-        <div class="pagamento-imagem-quarto" style="background-image: url('{{ reserva.quarto.imagem_url }}');"></div>
+      <!-- ESQUERDA-->
+      <div class="pagamento-esquerda">
+        <h2 class="pagamento-subtitulo">Sua viagem</h2>
+        
+        <div class="pagamento-info-item">
+          <div class="pagamento-info-label">Datas</div>
+          <div class="pagamento-info-value">
+            {% with checkin=reserva.checkin checkout=reserva.checkout %}
+              {{ checkin|date:"d" }} de {{ checkin|date:"M"|lower|slice:":3" }} - {{ checkout|date:"d" }} de {{ checkout|date:"M"|lower|slice:":3" }}
+            {% endwith %}
+          </div>
+        </div>
+
+        <div class="pagamento-info-item">
+          <div class="pagamento-info-label">Hospedes</div>
+          <div class="pagamento-info-value">
+            {{ reserva.hospedes }} {% if reserva.hospedes == 1 %}Hospede{% else %}Hospedes{% endif %}
+          </div>
+        </div>
+
+        <button type="button" id="botaoPagamentoRealizado" class="pagamento-botao">
+          Pagamento Realizado
+        </button>
       </div>
 
-      <!-- Informações da reserva -->
-      <div class="pagamento-info-container">
-        <div class="pagamento-info-box">
-          <h2>Informações da Reserva</h2>
+      <!-- Lado Direito: Card com Imagem e Total -->
+      <div class="pagamento-direita">
+        <div class="pagamento-card">
+          <div class="pagamento-imagem-quarto" style="background-image: url('{{ reserva.quarto.imagem_url }}');"></div>
           
-          <div class="pagamento-info-item">
-            <strong>Quarto:</strong>
-            <span>{{ reserva.quarto.nome }}</span>
+          <div class="pagamento-card-info">
+            <p class="pagamento-card-descricao">Espaço inteiro: apartamento em Recife, Brasil</p>
+            
+            <div class="pagamento-divisor"></div>
+            
+            <div class="pagamento-total-container">
+              <span class="pagamento-total-label">Seu Total</span>
+              <span class="pagamento-total-valor">R$ {{ reserva.valor_total|floatformat:0 }}</span>
+            </div>
           </div>
-
-          <div class="pagamento-info-item">
-            <strong>Check-in:</strong>
-            <span>{{ reserva.checkin|date:"d/m/Y" }}</span>
-          </div>
-
-          <div class="pagamento-info-item">
-            <strong>Check-out:</strong>
-            <span>{{ reserva.checkout|date:"d/m/Y" }}</span>
-          </div>
-
-          <div class="pagamento-info-item">
-            <strong>Hóspedes:</strong>
-            <span>{{ reserva.hospedes }} {% if reserva.hospedes == 1 %}hóspede{% else %}hóspedes{% endif %}</span>
-          </div>
-
-          <div class="pagamento-total-container">
-            <strong class="pagamento-total-label">Valor Total:</strong>
-            <span class="pagamento-total-valor">R$ {{ reserva.valor_total|floatformat:2 }}</span>
-          </div>
-
-          <button type="button" id="botaoPagamentoRealizado">
-            Pagamento Realizado
-          </button>
         </div>
       </div>
     </div>
@@ -172,111 +174,7 @@
 
 <!-- O SCRIPT DOS NEGOCIOS DO POPUP ESTAO AQUI (COPIAR NO DE VCS) -->
   <script src="{% static 'core/script.js' %}"></script>
-  <script>
-    // Script específico para página de pagamento
-    (function() {
-      function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-      }
-
-      function finalizarPagamento() {
-        const botao = document.getElementById('botaoPagamentoRealizado');
-        if (!botao) {
-          console.error('Botão não encontrado');
-          return;
-        }
-
-        const mainElement = document.querySelector('.pagamento-main');
-        if (!mainElement) {
-          alert('Erro: Elemento não encontrado');
-          return;
-        }
-
-        const reservaId = parseInt(mainElement.getAttribute('data-reserva-id'));
-        if (isNaN(reservaId)) {
-          alert('Erro: ID da reserva inválido');
-          return;
-        }
-
-        const csrfToken = getCookie('csrftoken');
-        if (!csrfToken) {
-          alert('Erro: Token CSRF não encontrado. Recarregue a página.');
-          return;
-        }
-
-        // Desabilitar botão
-        botao.disabled = true;
-        botao.textContent = 'Processando...';
-
-        console.log('Enviando pagamento para reserva ID:', reservaId);
-
-        fetch('/api/finalizar-pagamento/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-          },
-          body: JSON.stringify({
-            reserva_id: reservaId
-          })
-        })
-        .then(response => {
-          console.log('Status da resposta:', response.status);
-          if (!response.ok) {
-            return response.json().then(data => {
-              throw new Error(data.message || 'Erro no servidor');
-            });
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Resposta:', data);
-          if (data.success) {
-            alert('Pagamento realizado com sucesso!');
-            window.location.href = '/quartos/';
-          } else {
-            alert('Erro: ' + (data.message || 'Erro desconhecido'));
-            botao.disabled = false;
-            botao.textContent = 'Pagamento Realizado';
-          }
-        })
-        .catch(error => {
-          console.error('Erro:', error);
-          alert('Erro ao processar pagamento: ' + error.message);
-          botao.disabled = false;
-          botao.textContent = 'Pagamento Realizado';
-        });
-      }
-
-      // Aguardar DOM carregar
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-          const botao = document.getElementById('botaoPagamentoRealizado');
-          if (botao) {
-            botao.addEventListener('click', finalizarPagamento);
-            console.log('Botão de pagamento configurado!');
-          }
-        });
-      } else {
-        const botao = document.getElementById('botaoPagamentoRealizado');
-        if (botao) {
-          botao.addEventListener('click', finalizarPagamento);
-          console.log('Botão de pagamento configurado!');
-        }
-      }
-    })();
-  </script>
+  
   </body>
 </html>
 

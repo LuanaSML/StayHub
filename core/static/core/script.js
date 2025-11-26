@@ -540,3 +540,113 @@ setTimeout(function() {
     document.getElementById("botaoPagamentoRealizado").setAttribute('data-inicializado', 'true');
   }
 }, 500);
+
+
+
+
+
+
+
+// Script específico para página de pagamento
+    (function() {
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      function finalizarPagamento() {
+        const botao = document.getElementById('botaoPagamentoRealizado');
+        if (!botao) {
+          console.error('Botão não encontrado');
+          return;
+        }
+
+        const mainElement = document.querySelector('.pagamento-main');
+        if (!mainElement) {
+          alert('Erro: Elemento não encontrado');
+          return;
+        }
+
+        const reservaId = parseInt(mainElement.getAttribute('data-reserva-id'));
+        if (isNaN(reservaId)) {
+          alert('Erro: ID da reserva inválido');
+          return;
+        }
+
+        const csrfToken = getCookie('csrftoken');
+        if (!csrfToken) {
+          alert('Erro: Token CSRF não encontrado. Recarregue a página.');
+          return;
+        }
+
+        // Desabilitar botão
+        botao.disabled = true;
+        botao.textContent = 'Processando...';
+
+        console.log('Enviando pagamento para reserva ID:', reservaId);
+
+        fetch('/api/finalizar-pagamento/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify({
+            reserva_id: reservaId
+          })
+        })
+        .then(response => {
+          console.log('Status da resposta:', response.status);
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || 'Erro no servidor');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Resposta:', data);
+          if (data.success) {
+            alert('Pagamento realizado com sucesso!');
+            window.location.href = '/quartos/';
+          } else {
+            alert('Erro: ' + (data.message || 'Erro desconhecido'));
+            botao.disabled = false;
+            botao.textContent = 'Pagamento Realizado';
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao processar pagamento: ' + error.message);
+          botao.disabled = false;
+          botao.textContent = 'Pagamento Realizado';
+        });
+      }
+
+      // Aguardar DOM carregar
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          const botao = document.getElementById('botaoPagamentoRealizado');
+          if (botao) {
+            botao.addEventListener('click', finalizarPagamento);
+            console.log('Botão de pagamento configurado!');
+          }
+        });
+      } else {
+        const botao = document.getElementById('botaoPagamentoRealizado');
+        if (botao) {
+          botao.addEventListener('click', finalizarPagamento);
+          console.log('Botão de pagamento configurado!');
+        }
+      }
+    })();
