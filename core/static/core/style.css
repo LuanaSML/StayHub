@@ -12,6 +12,8 @@ body {
     padding-top: 120px;
 }
 
+
+
 /* TUDO DO HEADER*/
 
 header {
@@ -88,6 +90,11 @@ nav.esquerda a:hover {
 }
 
 /* FINAL DO HEADER*/
+
+
+
+
+
 
 /* POPUP DE CADASTRO E LOGIN */
 
@@ -206,6 +213,12 @@ nav.esquerda a:hover {
 /* FIM DO POPUP */
 
 
+
+
+
+
+
+
 /* INICIO DE FOOTER */
 
 footer {
@@ -279,6 +292,19 @@ footer {
 
 
 
+
+  
+
+
+
+
+
+
+
+
+
+
+
 /*QUARTOS DO HOME*/
 
 #tituloHome{
@@ -345,8 +371,12 @@ margin-left: 5%;
 
 /*QUARTOS DO HOME FINAL*/
 
-/*QUARTO DETALHES (QUANDO A GENTE FAZ CLICK NO QUARTO) */
 
+
+
+
+
+/*QUARTO DETALHES (QUANDO A GENTE FAZ CLICK NO QUARTO) */
 
 #tudoDoQuarto{
 margin-left: 4%;
@@ -518,101 +548,27 @@ gap: 15px;
 
 /*QUARTO DETALHES FINAL (QUANDO A GENTE FAZ CLICK NO QUARTO) */
 
+
+
+
 /*QUARTOS INICIO */
 
 #CantoQuadradosCaixa {
-    padding: 40px !important;
-    background-color: #006EA1 !important;
+    background-color: #006EA1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;   
 }
-
 
 #CantoQuadradosCaixa h2 {
     margin: 0;           
     color: white;        
-    margin-bottom: 20px;
 }
 
-/* ESTILOS DAS RESERVAS NA PÁGINA DE QUARTOS */
+/* INICIO PÁGINA DE PAGAMENTO */
 
-.reserva-card {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: #e8e8e8;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    margin-top: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.reserva-imagem {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-    display: block;
-}
-
-.reserva-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.reserva-titulo {
-    margin: 0;
-    color: #333;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.3;
-}
-
-.reserva-descricao {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.sem-reservas-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 40px;
-    margin-top: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.sem-reservas-texto {
-    margin: 0;
-    color: #333;
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-.sem-reservas-emoticon {
-    margin: 10px 0 0 0;
-    color: #333;
-    font-size: 20px;
-}
-
-
-
-
-
-
-
-
-
-
-
-/* INICIOPÁGINA DE PAGAMENTO */
-
-.pagamento-main {
+.pagamentoContainer {
     padding: 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -621,76 +577,69 @@ gap: 15px;
     background-color: transparent;
 }
 
-.pagamento-main .pagamento-header {
+.pagamentoCabecalho {
     display: flex;
     align-items: center;
     margin-bottom: 40px;
     gap: 15px;
 }
 
-.pagamento-main .pagamento-voltar {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    color: #000;
-    font-size: 20px;
-}
 
-.pagamento-main .pagamento-voltar i {
-    margin-right: 0;
-}
-
-.pagamento-main .pagamento-titulo {
+.pagamentoTitulo {
     margin: 0;
     font-size: 24px;
     font-weight: bold;
     text-transform: lowercase;
+    color: #000;
 }
 
-.pagamento-main .pagamento-container {
+.pagamentoConteudo {
     display: flex;
     gap: 40px;
     flex-wrap: wrap;
     align-items: flex-start;
+    align-content: flex-start;
 }
 
-/* ESquerda*/
-.pagamento-main .pagamento-esquerda {
+/* Lado Esquerdo: Sua Viagem */
+.pagamentoEsquerda {
     flex: 1;
     min-width: 300px;
     max-width: 500px;
 }
 
-.pagamento-main .pagamento-subtitulo {
+.pagamentoSubtitulo {
     font-size: 22px;
     font-weight: bold;
     margin-bottom: 30px;
     color: #000;
 }
 
-.pagamento-main .pagamento-info-item {
-    margin-bottom: 25px;
-}
-
-.pagamento-main .pagamento-info-label {
+.pagamentoLabelInfo {
     font-size: 16px;
-    color: #666;
+    color: #000;
+    margin-top: 25px;
     margin-bottom: 8px;
     display: block;
     text-transform: capitalize;
 }
 
-.pagamento-main .pagamento-info-value {
+.pagamentoLabelInfo:first-of-type {
+    margin-top: 0;
+}
+
+.pagamentoInfoValor {
     font-size: 16px;
     color: #000;
     font-weight: normal;
+    margin-bottom: 25px;
 }
 
-.pagamento-main .pagamento-botao {
+.pagamentoBotao {
     width: 100%;
     padding: 18px 30px;
     margin-top: 30px;
-    background: #007bff;
+    background: #006EA1;
     color: white;
     border: none;
     border-radius: 12px;
@@ -700,90 +649,102 @@ gap: 15px;
     transition: background 0.3s ease;
 }
 
-.pagamento-main .pagamento-botao:hover {
-    background: #006EA1;
+.pagamentoBotao:hover {
+    background: #005a8a;
 }
 
-.pagamento-main .pagamento-botao:disabled {
+.pagamentoBotao:disabled {
     background: #6c757d;
     cursor: not-allowed;
 }
 
-/* DIREITA */
-.pagamento-main .pagamento-direita {
+/* Lado Direito: Card */
+.pagamentoDireita {
     flex: 1;
     min-width: 300px;
     max-width: 400px;
+    display: flex;
+    align-items: flex-start;
 }
 
-.pagamento-main .pagamento-card {
+.pagamentoCard {
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     overflow: hidden;
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.pagamento-main .pagamento-imagem-quarto {
+.pagamentoImagemQuarto {
     width: 100%;
-    height: 200px;
+    height: 150px;
     background-size: cover;
     background-position: center;
-    border-radius: 0;
+    border-radius: 12px 12px 0 0;
     margin: 0;
+    flex-shrink: 0;
 }
 
-.pagamento-main .pagamento-card-info {
-    padding: 20px;
+.pagamentoCardInfo {
+    padding: 15px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.pagamento-main .pagamento-card-descricao {
+.pagamentoCardDescricao {
     font-size: 16px;
     color: #000;
-    margin: 0 0 20px 0;
-    line-height: 1.5;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+    flex-shrink: 0;
 }
 
-.pagamento-main .pagamento-divisor {
+.pagamentoDivisor {
     height: 1px;
     background: #e0e0e0;
-    margin: 20px 0;
+    margin: 12px 0;
+    flex-shrink: 0;
 }
 
-.pagamento-main .pagamento-total-container {
+.pagamentoTotalContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0;
     padding: 0;
     border: none;
+    flex-shrink: 0;
 }
 
-.pagamento-main .pagamento-total-label {
+.pagamentoTotalLabel {
     font-size: 18px;
     font-weight: bold;
     color: #000;
     margin: 0;
 }
 
-.pagamento-main .pagamento-total-valor {
+.pagamentoTotalValor {
     font-size: 18px;
     font-weight: bold;
     color: #000;
     margin: 0;
 }
 
-.pagamento-erro-container {
+.pagamentoErroContainer {
     text-align: center;
     padding: 40px;
 }
 
-.pagamento-erro-mensagem {
+.pagamentoErroMensagem {
     color: red;
     font-size: 18px;
 }
 
-.pagamento-erro-link {
+.pagamentoErroLink {
     display: inline-block;
     margin-top: 20px;
     padding: 10px 20px;
@@ -794,6 +755,7 @@ gap: 15px;
 }
 
 
-/* FIM ESTILOS DA PÁGINA DE PAGAMENTO */
+
+/* FIM PÁGINA DE PAGAMENTO */
 
 

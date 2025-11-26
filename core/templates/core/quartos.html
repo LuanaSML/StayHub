@@ -88,10 +88,11 @@
 
 
 
-<!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
+<!-- PARTE DO QUARTOS QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
 
 <main class="CantoDosQuartos">
     <section id="CantoQuadradosCaixa">
+      
         <h2>QUARTOS RESERVADOS</h2>
         {% if user.is_authenticated %}
           {% if reservas %}
@@ -110,6 +111,7 @@
                 </div>
               </div>
             {% endfor %}
+
           {% else %}
             <div class="sem-reservas-card">
               <p class="sem-reservas-texto">NÃO IDENTIFICAMOS</p>
@@ -119,6 +121,7 @@
               <p class="sem-reservas-emoticon">:/</p>
             </div>
           {% endif %}
+
         {% else %}
           <div class="sem-reservas-card">
             <p class="sem-reservas-texto">NÃO IDENTIFICAMOS</p>
@@ -132,7 +135,7 @@
  </main>
 
 
-<!-- PARTE DO HOME QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
+<!-- PARTE DO QUARTO QUE VOCES NAO VAO COPIAR!!! NAOO COPIAR -->
 
 
 

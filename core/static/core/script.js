@@ -442,7 +442,7 @@ function inicializarPagamento() {
     return;
   }
 
-  const mainElement = document.querySelector(".pagamento-main");
+  const mainElement = document.querySelector(".pagamentoContainer");
   if (!mainElement) {
     console.error("Elemento principal de pagamento não encontrado");
     return;
@@ -571,7 +571,7 @@ setTimeout(function() {
           return;
         }
 
-        const mainElement = document.querySelector('.pagamento-main');
+        const mainElement = document.querySelector('.pagamentoContainer');
         if (!mainElement) {
           alert('Erro: Elemento não encontrado');
           return;

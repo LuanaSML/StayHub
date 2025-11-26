@@ -83,63 +83,59 @@
 
 
 <!-- CONTEÚDO DA PÁGINA DE PAGAMENTO -->
-<main class="pagamento-main" data-reserva-id="{{ reserva.id }}">
+<main class="pagamentoContainer" data-reserva-id="{{ reserva.id }}">
   {% if reserva %}
-    <div class="pagamento-header">
-      <a href="{% url 'quartoDetalhe' reserva.quarto.id %}" class="pagamento-voltar">
-        <i class="fa-solid fa-arrow-left"></i>
-      </a>
-      <h1 class="pagamento-titulo">pagamento</h1>
+    <div class="pagamentoCabecalho">
+      <p class="detalheVoltar">
+        <a class="detalheVoltar" href="{% url 'quartoDetalhe' reserva.quarto.id %}">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+      </p>
+      <h1 class="pagamentoTitulo">pagamento</h1>
     </div>
 
-    <div class="pagamento-container">
+    <div class="pagamentoConteudo">
       <!-- ESQUERDA-->
-      <div class="pagamento-esquerda">
-        <h2 class="pagamento-subtitulo">Sua viagem</h2>
+      <div class="pagamentoEsquerda">
+        <h2 class="pagamentoSubtitulo">Sua viagem</h2>
         
-        <div class="pagamento-info-item">
-          <div class="pagamento-info-label">Datas</div>
-          <div class="pagamento-info-value">
-            {% with checkin=reserva.checkin checkout=reserva.checkout %}
-              {{ checkin|date:"d" }} de {{ checkin|date:"M"|lower|slice:":3" }} - {{ checkout|date:"d" }} de {{ checkout|date:"M"|lower|slice:":3" }}
-            {% endwith %}
-          </div>
+        <div class="pagamentoLabelInfo">Datas</div>
+        <div class="pagamentoInfoValor">
+          {% with checkin=reserva.checkin checkout=reserva.checkout %}
+            {{ checkin|date:"d" }} de {{ checkin|date:"M"|lower|slice:":3" }} - {{ checkout|date:"d" }} de {{ checkout|date:"M"|lower|slice:":3" }}
+          {% endwith %}
         </div>
 
-        <div class="pagamento-info-item">
-          <div class="pagamento-info-label">Hospedes</div>
-          <div class="pagamento-info-value">
-            {{ reserva.hospedes }} {% if reserva.hospedes == 1 %}Hospede{% else %}Hospedes{% endif %}
-          </div>
+        <div class="pagamentoLabelInfo">Hospedes</div>
+        <div class="pagamentoInfoValor">
+          {{ reserva.hospedes }} {% if reserva.hospedes == 1 %}Hospede{% else %}Hospedes{% endif %}
         </div>
 
-        <button type="button" id="botaoPagamentoRealizado" class="pagamento-botao">
+        <button type="button" id="botaoPagamentoRealizado" class="pagamentoBotao">
           Pagamento Realizado
         </button>
       </div>
 
       <!-- Lado Direito: Card com Imagem e Total -->
-      <div class="pagamento-direita">
-        <div class="pagamento-card">
-          <div class="pagamento-imagem-quarto" style="background-image: url('{{ reserva.quarto.imagem_url }}');"></div>
+      <div class="pagamentoDireita">
+        <div class="pagamentoCard">
+          <div class="pagamentoImagemQuarto" style="background-image: url('{{ reserva.quarto.imagem_url }}');"></div>
           
-          <div class="pagamento-card-info">
-            <p class="pagamento-card-descricao">Espaço inteiro: apartamento em Recife, Brasil</p>
-            
-            <div class="pagamento-divisor"></div>
-            
-            <div class="pagamento-total-container">
-              <span class="pagamento-total-label">Seu Total</span>
-              <span class="pagamento-total-valor">R$ {{ reserva.valor_total|floatformat:0 }}</span>
+          <div class="pagamentoCardInfo">
+            <p class="pagamentoCardDescricao">Espaço inteiro: apartamento em Recife, Brasil</p>
+            <div class="pagamentoDivisor"></div>
+            <div class="pagamentoTotalContainer">
+              <span class="pagamentoTotalLabel">Seu Total</span>
+              <span class="pagamentoTotalValor">R$ {{ reserva.valor_total|floatformat:0 }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   {% else %}
-    <div class="pagamento-erro-container">
-      <p class="pagamento-erro-mensagem">Erro: Reserva não encontrada</p>
-      <a href="{% url 'home' %}" class="pagamento-erro-link">Voltar para Home</a>
+    <div class="pagamentoErroContainer">
+      <p class="pagamentoErroMensagem">Erro: Reserva não encontrada</p>
+      <a href="{% url 'home' %}" class="pagamentoErroLink">Voltar para Home</a>
     </div>
   {% endif %}
 </main>
