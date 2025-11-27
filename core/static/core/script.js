@@ -407,6 +407,8 @@ function mudarNomeUsuario(novoNome) {
  * página de detalhe do quarto e clica em reservar, esta função cria a
  * reserva no banco de dados e redireciona para a página de pagamento.
  */
+
+// envia dados para servidor 
 function fazerReserva(quartoId, checkin, checkout, hospedes) {
   const mensagemErro = document.getElementById("mensagemErroReserva");
 
@@ -892,11 +894,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ===== FORMULÁRIO DE RESERVA =====
+  // ===== FORMULÁRIO DE RESERVA L=====
   const formReserva = document.getElementById("formReserva");
   if (formReserva) {
     formReserva.addEventListener("submit", function (e) {
-      e.preventDefault();
+      e.preventDefault(); 
 
       // Verificar se está logado
       const usuarioLogado = document.querySelector(".usuario-logado");

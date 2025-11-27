@@ -40,7 +40,7 @@ def quartoDetalhe(request, pk):
 def quartos(request):
     
     if request.user.is_authenticated:
-        reservas = Reserva.objects.filter(usuario=request.user).order_by('-criado_em')
+        reservas = Reserva.objects.filter(usuario=request.user).select_related('quarto').order_by('-criado_em')
     else:
         reservas = []
     
@@ -69,12 +69,14 @@ def quartos(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def criar_reserva(request):
+    
     """
     View para criar uma nova reserva via API
     Quando o usuário preenche o formulário de reserva e clica em "Reservar",
     o JavaScript envia os dados para esta função, que cria a reserva no banco.
-    
     """
+
+    #leer os dados do js
     try:
         data = json.loads(request.body)
         quarto_id = data.get('quarto_id')
@@ -82,6 +84,7 @@ def criar_reserva(request):
         checkout_str = data.get('checkout')
         hospedes = data.get('hospedes')
         
+        #validar os campos
         if not all([quarto_id, checkin_str, checkout_str, hospedes]):
             return JsonResponse({'success': False, 'message': 'Todos os campos são obrigatórios.'}, status=400)
         
