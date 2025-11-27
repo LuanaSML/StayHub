@@ -1,3 +1,5 @@
+# IMPORTAÇÕES - NECESSÁRIOS
+
 import json
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,7 +13,12 @@ from .models import Quarto, Reserva
 from django.contrib.auth.models import User
 
 
+# VIEWS DE PÁGINAS - RENDERIZAM TEMPLATES HTML
+# View da pagina inicial home. a def vai procurar os quartos disponiveis 
+#no banco de dados e vai mostrar na tela (os primeiros 15 quartos) 
+
 def home(request):
+   
     quartos = []
     
     try:
@@ -22,28 +29,52 @@ def home(request):
     return render(request, 'core/home.html', {'quartos': quartos})
 
 def contato(request):
-    """Página de contato"""
+    """apenas renderiza o template"""
     return render(request, 'core/contato.html')
 
-
 def quartoDetalhe(request, pk):
-    """Exibe a página de detalhe para um quarto específico."""
+    
     quarto = get_object_or_404(Quarto, pk=pk)
     return render(request, 'core/quartoDetalhe.html', {'quarto': quarto})
 
 def quartos(request):
-    """Página de quartos reservados"""
+    
     if request.user.is_authenticated:
         reservas = Reserva.objects.filter(usuario=request.user).order_by('-criado_em')
     else:
         reservas = []
+    
     return render(request, 'core/quartos.html', {'reservas': reservas})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# VIEWS DE API - RETORNAM JSON (USADAS PELO JAVASCRIPT)
 
 @login_required
 @csrf_exempt
 @require_http_methods(["POST"])
 def criar_reserva(request):
-    """View para criar uma nova reserva"""
+    """
+    View para criar uma nova reserva via API
+    Quando o usuário preenche o formulário de reserva e clica em "Reservar",
+    o JavaScript envia os dados para esta função, que cria a reserva no banco.
+    
+    """
     try:
         data = json.loads(request.body)
         quarto_id = data.get('quarto_id')
@@ -62,8 +93,8 @@ def criar_reserva(request):
         if checkout <= checkin:
             return JsonResponse({'success': False, 'message': 'A data de check-out deve ser posterior à data de check-in.'}, status=400)
         
-        # Verificar se já existe uma reserva para o mesmo quarto nas mesmas datas (ou datas que se sobrepõem)
-        # Uma reserva conflita se: (novo_checkin < existente_checkout) AND (novo_checkout > existente_checkin)
+        # Verificar se já existe reserva para o mesmo quarto nas mesmas datas
+        # Uma reserva conflita se as datas se sobrepõem
         reservas_existentes = Reserva.objects.filter(
             quarto=quarto
         ).filter(
@@ -78,7 +109,7 @@ def criar_reserva(request):
                 'message': f'Este quarto já está reservado de {reserva_existente.checkin.strftime("%d/%m/%Y")} a {reserva_existente.checkout.strftime("%d/%m/%Y")}. Escolha outras datas.'
             }, status=400)
         
-        # Verificar se o mesmo usuário já tem uma reserva para o mesmo quarto nas mesmas datas
+        # Verificar se o mesmo usuário já tem reserva para o mesmo quarto
         reservas_usuario = Reserva.objects.filter(
             usuario=request.user,
             quarto=quarto
@@ -97,7 +128,7 @@ def criar_reserva(request):
         dias = (checkout - checkin).days
         valor_total = quarto.preco * dias
         
-        # Criar reserva
+        # Criar reserva no banco de dados
         reserva = Reserva.objects.create(
             usuario=request.user,
             quarto=quarto,
@@ -121,7 +152,11 @@ def criar_reserva(request):
 
 @login_required
 def pagamento(request, reserva_id):
-    """View para exibir a página de pagamento"""
+    """
+    View para exibir a página de pagamento
+    Após criar uma reserva, o usuário é redirecionado para esta página.
+    Busca os dados da reserva no banco e mostra na tela.
+    """
     try:
         reserva = Reserva.objects.get(pk=reserva_id, usuario=request.user)
     except Reserva.DoesNotExist:
@@ -133,7 +168,11 @@ def pagamento(request, reserva_id):
 @csrf_exempt
 @require_http_methods(["POST"])
 def finalizar_pagamento(request):
-    """View para finalizar o pagamento"""
+    """
+    View para finalizar o pagamento de uma reserva via API
+    Quando o usuário clica no botão "Pagamento Realizado", marca a reserva
+    como paga no banco de dados (reserva.pago = True)
+    """
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Você precisa estar logado.'}, status=401)
     
@@ -177,7 +216,18 @@ def finalizar_pagamento(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def cadastro(request):
-    """View para cadastro de novos usuários via API"""
+    """
+    View para cadastro de novos usuários via API
+    Quando o usuário preenche o formulário de cadastro e clica em "REGISTRAR",
+    cria a conta do usuário no banco de dados e faz login automático.
+    
+    Validações:
+    - Verifica se todos os campos foram preenchidos
+    - Verifica se a senha tem pelo menos 6 caracteres
+    - Verifica se o email já está cadastrado
+    - Cria o usuário no banco (senha é criptografada automaticamente)
+    - Faz login automático
+    """
     if request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Você já está logado.'}, status=400)
     
@@ -202,7 +252,8 @@ def cadastro(request):
         if User.objects.filter(username=email).exists():
             return JsonResponse({'success': False, 'message': 'Este email já está cadastrado.'}, status=400)
         
-        # Criar usuário
+        # Criar usuário no banco de dados
+        # User.objects.create_user() criptografa a senha automaticamente
         user = User.objects.create_user(
             username=email,
             email=email,
@@ -233,7 +284,11 @@ def cadastro(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def login_view(request):
-    """View para login de usuários via API"""
+    """
+    View para login de usuários via API
+    Quando o usuário preenche o formulário de login e clica em "ENTRAR",
+    autentica o usuário (verifica email e senha) e cria uma sessão de login.
+    """
     if request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Você já está logado.'}, status=400)
     
@@ -268,7 +323,11 @@ def login_view(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def logout_view(request):
-    """View para logout de usuários via API"""
+    """
+    View para logout de usuários via API
+    Quando o usuário clica no botão "SAIR", encerra a sessão do usuário.
+    Não deleta a conta, apenas encerra a sessão (pode fazer login novamente).
+    """
     from django.contrib.auth import logout
     if request.user.is_authenticated:
         logout(request)
@@ -284,7 +343,11 @@ def logout_view(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def mudar_nome(request):
-    """View para mudar o nome do usuário"""
+    """
+    View para mudar o nome do usuário via API
+    Quando o usuário clica no nome no header e escolhe mudar o nome,
+    atualiza o campo first_name do usuário no banco de dados.
+    """
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Você precisa estar logado.'}, status=401)
     
@@ -295,7 +358,7 @@ def mudar_nome(request):
         if not novo_nome:
             return JsonResponse({'success': False, 'message': 'O nome não pode estar vazio.'}, status=400)
         
-        # Atualizar o nome do usuário
+        # Atualizar o nome do usuário no banco de dados
         request.user.first_name = novo_nome
         request.user.save()
         
@@ -318,7 +381,12 @@ def mudar_nome(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def eliminar_reserva(request):
-    """View para eliminar uma reserva"""
+    """
+    View para eliminar uma reserva via API
+    Quando o usuário clica no botão de eliminar (ícone de lixeira) na página
+    de quartos reservados, remove a reserva do banco de dados.
+    Ao deletar, as datas ficam automaticamente liberadas para outros usuários.
+    """
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Você precisa estar logado.'}, status=401)
     
