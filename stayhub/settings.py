@@ -10,16 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import os
-
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
-
-UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
-UNSPLASH_SECRET_KEY = os.getenv("UNSPLASH_SECRET_KEY")
 
 
 from pathlib import Path
@@ -82,8 +72,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'stayhub.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# BANCO DE DADOSSSSSSSSSSSS AQUIIIIIIIIIIIIIIIII O DEFAULT O NORMAL AQUI EMBAIXO ESSE TRECO AQUI
 
 DATABASES = {
     'default': {
@@ -93,8 +82,7 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# VALIDAR SENHAS (FAZ PARTE DE CRIAR O USUARI)
 
 AUTH_PASSWORD_VALIDATORS = [
     {
